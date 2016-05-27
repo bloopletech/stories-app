@@ -7,9 +7,9 @@ import java.io.IOException;
  * Created by i on 27/05/2016.
  */
 public class StoryOpener {
-    public Story open(File file) {
+    public Story open(String path) {
         try {
-            StoryParser parser = new StoryParser(file);
+            StoryParser parser = new StoryParser(new File(path));
             return parser.parse();
         }
         catch(IOException e) {
