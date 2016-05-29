@@ -1,9 +1,7 @@
 package bloople.net.stories;
 
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -17,7 +15,7 @@ public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> 
         public TextView textView;
         public ViewHolder(View view) {
             super(view);
-            textView = (TextView)view;
+            textView = (TextView)view.findViewById(R.id.text_view);
         }
     }
 
@@ -28,26 +26,10 @@ public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> 
     // Create new views (invoked by the layout manager)
     @Override
     public NodesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        TextView tv = new TextView(parent.getContext());
-        tv.setTextSize(18.0f);
-        tv.setLineSpacing(0f, 1.2f);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.node_view, parent,
+                false);
 
-        Resources r = parent.getResources();
-        int horizontalPadding = Math.round(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                15.0f,
-                r.getDisplayMetrics()
-        ));
-        int paddingBottom = Math.round(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_SP,
-                16.0f,
-                r.getDisplayMetrics()
-        ));
-        tv.setPadding(horizontalPadding, 0, horizontalPadding, paddingBottom);
-
-        tv.setTextColor(Color.BLACK);
-
-        return new ViewHolder(tv);
+        return new ViewHolder(view);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -58,14 +40,9 @@ public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> 
         tv.setText(nodes.get(position));
 
         if(position == 0) {
-            int paddingTop = Math.round(TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    15.0f,
-                    tv.getResources().getDisplayMetrics()
-            ));
             tv.setPadding(
                     tv.getPaddingLeft(),
-                    paddingTop,
+                    tv.getPaddingBottom(),
                     tv.getPaddingRight(),
                     tv.getPaddingBottom()
             );
