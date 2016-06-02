@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         else {
             MaterialFilePicker picker = new MaterialFilePicker();
             picker.withActivity(this).withRequestCode(PICKER_CODE).withFilter(
-                    Pattern.compile(".*\\.html?"));
+                    Pattern.compile(".*\\.txt?"));
 
             if(lastPath != null) picker.withRootPath(new File(lastPath).getParentFile().toString());
 

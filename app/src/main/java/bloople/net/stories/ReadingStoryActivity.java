@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.io.File;
 import java.util.List;
 
 public class ReadingStoryActivity extends AppCompatActivity {
@@ -28,7 +29,7 @@ public class ReadingStoryActivity extends AppCompatActivity {
         Intent intent = getIntent();
         path = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 
-        final List<CharSequence> nodes = (new StoryOpener()).open(path).nodes();
+        final List<CharSequence> nodes = StoryParser.parse(path);
         final NodesAdapter adapter = new NodesAdapter(nodes);
         nodesView.setAdapter(adapter);
 
