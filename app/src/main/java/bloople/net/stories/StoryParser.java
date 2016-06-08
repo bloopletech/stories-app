@@ -1,30 +1,34 @@
 package bloople.net.stories;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Reader;
+import java.util.Scanner;
 
 /**
  * Created by i on 27/05/2016.
  */
 public class StoryParser {
-    public static List<CharSequence> parse(String path) {
-        try {
-            ArrayList<CharSequence> nodes = new ArrayList<>();
+    private Scanner scanner;
 
-            Story story = new Story(new FileReader(new File(path)));
+    public StoryParser(Reader reader) {
+        scanner = new Scanner(reader);
+        scanner.useDelimiter("\n\n");
+    }
 
-            while(story.hasNext()) {
-                nodes.add(story.next());
-            }
-
-            return nodes;
+    public void parse(Story story) throws IOException {
+        while(scanner.hasNext()) {
+            story.add(next());
         }
-        catch(IOException e) {
-            e.printStackTrace();
-            return null;
+    }
+
+    public Node next() throws IOException {
+        String content = scanner.next();
+
+        if(content.startsWith("#")) {
+            return NodeFactory.heading(content);
+        }
+        else {
+            return NodeFactory.paragraph(content);
         }
     }
 }

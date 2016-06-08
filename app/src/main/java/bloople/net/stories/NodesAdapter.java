@@ -9,7 +9,7 @@ import android.widget.TextView;
 import java.util.List;
 
 public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
-    private List<CharSequence> nodes;
+    private List<Node> nodes;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
@@ -19,7 +19,7 @@ public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> 
         }
     }
 
-    public NodesAdapter(List<CharSequence> inNodes) {
+    public NodesAdapter(List<Node> inNodes) {
         nodes = inNodes;
     }
 
@@ -37,7 +37,7 @@ public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView tv = holder.textView;
 
-        tv.setText(nodes.get(position));
+        tv.setText(nodes.get(position).content());
 
         if(position == 0) {
             tv.setPadding(

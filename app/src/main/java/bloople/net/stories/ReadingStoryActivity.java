@@ -8,8 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import java.io.File;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class ReadingStoryActivity extends AppCompatActivity {
     private RecyclerView nodesView;
@@ -29,8 +30,8 @@ public class ReadingStoryActivity extends AppCompatActivity {
         Intent intent = getIntent();
         path = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 
-        final List<CharSequence> nodes = StoryParser.parse(path);
-        final NodesAdapter adapter = new NodesAdapter(nodes);
+        final Story story = parseStory(path);
+        final NodesAdapter adapter = new NodesAdapter(story.nodes());
         nodesView.setAdapter(adapter);
 
         SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
@@ -45,5 +46,19 @@ public class ReadingStoryActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(path, layoutManager.findFirstVisibleItemPosition());
         editor.apply();
+    }
+
+    private static Story parseStory(String path) {
+        try {
+            Story story = new Story();
+            StoryParser parser = new StoryParser(new BufferedReader(new FileReader(path)));
+            parser.parse(story);
+
+            return story;
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
