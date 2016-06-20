@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.nbsp.materialfilepicker.ui.FilePickerActivity;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -28,7 +30,7 @@ public class ReadingStoryActivity extends AppCompatActivity {
         nodesView.setLayoutManager(layoutManager);
 
         Intent intent = getIntent();
-        path = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        path = intent.getStringExtra(FilePickerActivity.RESULT_PATH);
 
         final Story story = parseStory(path);
         final NodesAdapter adapter = new NodesAdapter(story.nodes());
