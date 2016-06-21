@@ -12,7 +12,7 @@ public class StoryParser {
 
     public StoryParser(Reader reader) {
         scanner = new Scanner(reader);
-        scanner.useDelimiter("\n\n");
+        scanner.useDelimiter("(?:\r?\n){2,}+");
     }
 
     public void parse(Story story) throws IOException {
