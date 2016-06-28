@@ -1,4 +1,4 @@
-package bloople.net.stories;
+package net.bloople.stories;
 
 public class Heading extends Node {
     private int level;

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "bloople.net.stories"
+        applicationId "net.bloople.stories"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1

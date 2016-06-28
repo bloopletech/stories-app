@@ -1,4 +1,4 @@
-package bloople.net.stories;
+package net.bloople.stories;
 
 import android.graphics.Typeface;
 import android.text.SpannableString;

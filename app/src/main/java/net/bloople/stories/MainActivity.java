@@ -1,15 +1,11 @@
-package bloople.net.stories;
+package net.bloople.stories;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nbsp.materialfilepicker.MaterialFilePicker;
-import com.nbsp.materialfilepicker.utils.PickerState;
 
-import java.io.File;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {

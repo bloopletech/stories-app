@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="bloople.net.stories.MainActivity"
+    tools:context="net.bloople.stories.MainActivity"
     android:background="#ffffff">
 
 </RelativeLayout>

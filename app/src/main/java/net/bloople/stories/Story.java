@@ -1,4 +1,4 @@
-package bloople.net.stories;
+package net.bloople.stories;
 
 import java.util.ArrayList;
 import java.util.List;

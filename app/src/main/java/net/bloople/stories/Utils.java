@@ -1,4 +1,4 @@
-package bloople.net.stories;
+package net.bloople.stories;
 
 import android.Manifest;
 import android.app.Activity;

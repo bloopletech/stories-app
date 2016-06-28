@@ -1,4 +1,4 @@
-package bloople.net.stories;
+package net.bloople.stories;
 
 public abstract class Node {
     private CharSequence content;

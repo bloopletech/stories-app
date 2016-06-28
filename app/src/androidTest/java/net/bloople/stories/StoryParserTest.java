@@ -1,4 +1,4 @@
-package bloople.net.stories;
+package net.bloople.stories;
 
 import android.support.test.runner.AndroidJUnit4;
 import android.text.SpannableString;

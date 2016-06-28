@@ -1,4 +1,4 @@
-package bloople.net.stories;
+package net.bloople.stories;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
