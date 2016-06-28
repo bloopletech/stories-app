@@ -66,8 +66,6 @@ public class FilePickerActivity extends AppCompatActivity implements DirectoryFr
             }
             pickerState.setPath(mPath);
 
-            System.out.println("mPath: " + mPath);
-            System.out.println("mRootPath: " + mRootPath);
             initFragment(pickerState);
         }
 
@@ -139,8 +137,12 @@ public class FilePickerActivity extends AppCompatActivity implements DirectoryFr
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (menuItem.getItemId() == android.R.id.home) {
-            addFragmentToBackStack(FileUtils.cutLastSegmentOfPath(
-                    mCurrentFragment.getPickerState().getPath()));
+            String path = mCurrentFragment.getPickerState().getPath();
+            String parentPath = FileUtils.cutLastSegmentOfPath(path);
+
+            if(!mRootPath.startsWith(parentPath) || (parentPath.length() >= mRootPath.length())) {
+                addFragmentToBackStack(parentPath);
+            }
         }
         return super.onOptionsItemSelected(menuItem);
     }

@@ -114,7 +114,6 @@ public class DirectoryFragment extends Fragment {
     }
 
     private void initFilesList() {
-        System.out.println("initFilesList current sort method: " + mPickerState.getSortMethod());
         mDirectoryAdapter = new DirectoryAdapter(FileUtils.getFileListByDirPath(mFilter,
                 mPickerState));
 
