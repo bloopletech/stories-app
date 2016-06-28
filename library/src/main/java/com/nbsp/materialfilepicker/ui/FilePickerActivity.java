@@ -1,7 +1,9 @@
 package com.nbsp.materialfilepicker.ui;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.nbsp.materialfilepicker.R;
 import com.nbsp.materialfilepicker.filter.CompositeFilter;
+import com.nbsp.materialfilepicker.utils.FileComparator;
 import com.nbsp.materialfilepicker.utils.FileUtils;
 import com.nbsp.materialfilepicker.utils.PickerState;
 
@@ -22,26 +25,28 @@ import java.lang.reflect.Field;
 /**
  * Created by Dimorinny on 24.10.15.
  */
-public class FilePickerActivity extends AppCompatActivity implements DirectoryFragment.FileClickListener, DirectoryFragment.PickerStateListener {
+public class FilePickerActivity extends AppCompatActivity implements DirectoryFragment.DirectoryFragmentListener {
     public static final String ARG_CLASS = "arg_class";
-    public static final String ARG_START_PATH = "arg_start_path";
-    public static final String ARG_PICKER_STATE = "arg_picker_state";
+    public static final String ARG_PATH = "arg_path";
+    public static final String ARG_ROOT_PATH = "arg_root_path";
 
     public static final String ARG_FILTER = "arg_filter";
 
-    public static final String STATE_START_PATH = "state_start_path";
+    public static final String STATE_PATH = "state_path";
+    public static final String STATE_ROOT_PATH = "state_root_path";
     private static final String STATE_PICKER_STATE = "state_picker_state";
 
     public static final String RESULT_PATH = "result_path";
-    public static final String RESULT_PICKER_STATE = "result_picker_state";
     private static final int HANDLE_CLICK_DELAY = 150;
 
     private Toolbar mToolbar;
-    private String mStartPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-    private PickerState mPickerState;
+    private String mPath;
+    private String mRootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    private DirectoryFragment mCurrentFragment;
     private Class mClass;
 
     private CompositeFilter mFilter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +54,25 @@ public class FilePickerActivity extends AppCompatActivity implements DirectoryFr
         setContentView(R.layout.activity_file_picker);
 
         initArguments();
-        initViews();
-        initToolbar();
 
         if (savedInstanceState != null) {
-            mStartPath = savedInstanceState.getString(STATE_START_PATH);
-            mPickerState = (PickerState)savedInstanceState.getSerializable(STATE_PICKER_STATE);
+            mPath = savedInstanceState.getString(STATE_PATH);
+            mRootPath = savedInstanceState.getString(STATE_ROOT_PATH);
         } else {
-            initFragment();
+            PickerState pickerState = loadPreferences();
+            mPath = pickerState.getPath();
+            if (mPath == null) {
+                mPath = mRootPath;
+            }
+            pickerState.setPath(mPath);
+
+            System.out.println("mPath: " + mPath);
+            System.out.println("mRootPath: " + mRootPath);
+            initFragment(pickerState);
         }
 
-
+        initViews();
+        initToolbar();
     }
 
     @SuppressWarnings("unchecked")
@@ -72,16 +85,16 @@ public class FilePickerActivity extends AppCompatActivity implements DirectoryFr
             mFilter = (CompositeFilter) getIntent().getSerializableExtra(ARG_FILTER);
         }
 
-        if (getIntent().hasExtra(ARG_PICKER_STATE)) {
-            mPickerState = (PickerState)getIntent().getSerializableExtra(ARG_PICKER_STATE);
+        if (getIntent().hasExtra(ARG_PATH)) {
+            mPath = getIntent().getStringExtra(ARG_PATH);
         }
 
-        if (getIntent().hasExtra(ARG_START_PATH)) {
-            mStartPath = getIntent().getStringExtra(ARG_START_PATH);
+        if (getIntent().hasExtra(ARG_ROOT_PATH)) {
+            mRootPath = getIntent().getStringExtra(ARG_ROOT_PATH);
         }
 
-        if (mPickerState.getPath() == null) {
-            mPickerState.setPath(mStartPath);
+        if (mPath == null) {
+            mPath = mRootPath;
         }
     }
 
@@ -101,35 +114,24 @@ public class FilePickerActivity extends AppCompatActivity implements DirectoryFr
             TextView textView = (TextView) f.get(mToolbar);
             textView.setEllipsize(TextUtils.TruncateAt.START);
         } catch (Exception ignored) {}
-
-        updateTitle();
     }
 
     private void initViews() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
     }
 
-    private void initFragment() {
+    private void initFragment(PickerState pickerState) {
         getFragmentManager().beginTransaction()
-                .add(R.id.container, DirectoryFragment.getInstance(mFilter, mPickerState))
+                .add(R.id.container, DirectoryFragment.getInstance(mFilter, pickerState))
                 .commit();
     }
 
-    private void updateTitle() {
-        if (getSupportActionBar() != null) {
-            String title = mPickerState.getPath().isEmpty() ? "/" : mPickerState.getPath();
-            if (title.startsWith(mStartPath)) {
-                title = title.replaceFirst(mStartPath, getString(R.string.start_path_name));
-            }
-            getSupportActionBar().setTitle(title);
-        }
-    }
-
     private void addFragmentToBackStack(String path) {
-        mPickerState.setPath(path);
+        PickerState pickerState = new PickerState(mCurrentFragment.getPickerState());
+        pickerState.setPath(path);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, DirectoryFragment.getInstance(mFilter, mPickerState))
+                .replace(R.id.container, DirectoryFragment.getInstance(mFilter, pickerState))
                 .addToBackStack(null)
                 .commit();
     }
@@ -137,7 +139,8 @@ public class FilePickerActivity extends AppCompatActivity implements DirectoryFr
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (menuItem.getItemId() == android.R.id.home) {
-            onBackPressed();
+            addFragmentToBackStack(FileUtils.cutLastSegmentOfPath(
+                    mCurrentFragment.getPickerState().getPath()));
         }
         return super.onOptionsItemSelected(menuItem);
     }
@@ -148,8 +151,6 @@ public class FilePickerActivity extends AppCompatActivity implements DirectoryFr
 
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
-            mPickerState.setPath(FileUtils.cutLastSegmentOfPath(mPickerState.getPath()));
-            updateTitle();
         } else {
             moveTaskToBack(true);
             finish();
@@ -157,10 +158,16 @@ public class FilePickerActivity extends AppCompatActivity implements DirectoryFr
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if(mCurrentFragment != null) savePreferences(mCurrentFragment.getPickerState());
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(STATE_START_PATH, mStartPath);
-        outState.putSerializable(STATE_PICKER_STATE, mPickerState);
+        outState.putString(STATE_ROOT_PATH, mRootPath);
+        outState.putSerializable(STATE_PICKER_STATE, mCurrentFragment.getPickerState());
     }
 
     @Override
@@ -176,23 +183,57 @@ public class FilePickerActivity extends AppCompatActivity implements DirectoryFr
     private void handleFileClicked(final File clickedFile) {
         if (clickedFile.isDirectory()) {
             addFragmentToBackStack(clickedFile.getPath());
-            updateTitle();
         } else {
             chosen(clickedFile.getPath());
         }
     }
 
     private void chosen(String path) {
+        savePreferences(mCurrentFragment.getPickerState());
+
         Intent intent = new Intent(this, mClass);
         intent.putExtra(RESULT_PATH, path);
-        intent.putExtra(RESULT_PICKER_STATE, mPickerState);
 
         startActivity(intent);
     }
 
+    private PickerState loadPreferences() {
+        PickerState pickerState = new PickerState();
+        SharedPreferences preferences = getPreferences();
+
+        pickerState.setPath(preferences.getString("last_path", null));
+        pickerState.setSortMethod(preferences.getInt("last_sort_method",
+                FileComparator.SORT_ALPHABETIC));
+        pickerState.setSortDirectionAsc(preferences.getBoolean("last_sort_direction_asc", true));
+
+        return pickerState;
+    }
+
+    private void savePreferences(PickerState pickerState) {
+        SharedPreferences.Editor editor = getPreferences().edit();
+        editor.putString("last_path", pickerState.getPath());
+        editor.putInt("last_sort_method", pickerState.getSortMethod());
+        editor.putBoolean("last_sort_direction_asc", pickerState.isSortDirectionAsc());
+        editor.apply();
+    }
+
+    private SharedPreferences getPreferences() {
+        return getApplicationContext().getSharedPreferences("file-picker", Context.MODE_PRIVATE);
+    }
+
     @Override
-    public void onPickerStateChanged(PickerState pickerState) {
-        mPickerState.setSortMethod(pickerState.getSortMethod());
-        mPickerState.setSortDirectionAsc(pickerState.isSortDirectionAsc());
+    public void onFragmentLoaded(DirectoryFragment fragment) {
+        mCurrentFragment = fragment;
+        updateTitle(fragment.getPickerState().getPath());
+    }
+
+    private void updateTitle(String path) {
+        if (getSupportActionBar() != null) {
+            String title = path.isEmpty() ? "/" : path;
+            if (title.startsWith(mRootPath)) {
+                title = title.replaceFirst(mRootPath, getString(R.string.start_path_name));
+            }
+            getSupportActionBar().setTitle(title);
+        }
     }
 }

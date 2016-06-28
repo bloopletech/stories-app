@@ -2,6 +2,8 @@ package bloople.net.stories;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 
@@ -35,5 +37,9 @@ public class Utils {
                     REQUEST_EXTERNAL_STORAGE
             );
         }
+    }
+
+    public static SharedPreferences preferences(Activity activity) {
+        return activity.getApplicationContext().getSharedPreferences("app", Context.MODE_PRIVATE);
     }
 }

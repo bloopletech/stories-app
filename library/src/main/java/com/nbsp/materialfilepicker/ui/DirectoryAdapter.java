@@ -13,7 +13,10 @@ import com.nbsp.materialfilepicker.utils.FileTypeUtils;
 import com.nbsp.materialfilepicker.utils.FileUtils;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Dimorinny on 24.10.15.
@@ -47,12 +50,13 @@ public class DirectoryAdapter extends RecyclerView.Adapter<DirectoryAdapter.Dire
         }
     }
 
+    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d MMMM yyyy h:mm a",
+            Locale.getDefault());
+
     private List<File> mFiles;
-    private Context mContext;
     private OnItemClickListener mOnItemClickListener;
 
-    public DirectoryAdapter(Context context, List<File> files) {
-        mContext = context;
+    public DirectoryAdapter(List<File> files) {
         mFiles = files;
     }
 
@@ -75,8 +79,8 @@ public class DirectoryAdapter extends RecyclerView.Adapter<DirectoryAdapter.Dire
 
         FileTypeUtils.FileType fileType = FileTypeUtils.getFileType(currentFile);
         holder.mFileImage.setImageResource(fileType.getIcon());
-        holder.mFileSubtitle.setText(fileType.getDescription());
-        holder.mFileTite.setText(currentFile.getName());
+        holder.mFileSubtitle.setText(DATE_FORMAT.format(new Date(currentFile.lastModified())));
+        holder.mFileTite.setText(currentFile.getName().replaceAll("\\.txt$", ""));
         holder.mFileSize.setText(FileUtils.getReadableFileSize(currentFile.length()));
     }
 

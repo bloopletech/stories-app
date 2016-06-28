@@ -20,14 +20,12 @@ public class MaterialFilePicker {
     private Activity mActivity;
     private Pattern mFileFilter;
     private Boolean mDirectoriesFilter = false;
+    private String mPath;
     private String mRootPath;
     private Boolean mShowHidden = false;
-    private PickerState mPickerState;
     private Class mClass;
 
-    public MaterialFilePicker() {
-        mPickerState = new PickerState();
-    }
+    public MaterialFilePicker() {}
 
     public MaterialFilePicker withActivity(Activity activity) {
         mActivity = activity;
@@ -55,7 +53,7 @@ public class MaterialFilePicker {
     }
 
     public MaterialFilePicker withPath(String path) {
-        mPickerState.setPath(path);
+        mPath = path;
         return this;
     }
 
@@ -64,10 +62,6 @@ public class MaterialFilePicker {
         return this;
     }
 
-    public MaterialFilePicker withPickerState(PickerState pickerState) {
-        mPickerState = pickerState;
-        return this;
-    }
 
     private CompositeFilter getFilter() {
         ArrayList<FileFilter> filters = new ArrayList<>();
@@ -97,10 +91,13 @@ public class MaterialFilePicker {
         Intent intent = new Intent(mActivity, FilePickerActivity.class);
         intent.putExtra(FilePickerActivity.ARG_CLASS, mClass);
         intent.putExtra(FilePickerActivity.ARG_FILTER, filter);
-        intent.putExtra(FilePickerActivity.ARG_PICKER_STATE, mPickerState);
+
+        if (mPath != null) {
+            intent.putExtra(FilePickerActivity.ARG_PATH, mPath);
+        }
 
         if (mRootPath != null) {
-            intent.putExtra(FilePickerActivity.ARG_START_PATH, mRootPath);
+            intent.putExtra(FilePickerActivity.ARG_ROOT_PATH, mRootPath);
         }
 
         mActivity.startActivity(intent);

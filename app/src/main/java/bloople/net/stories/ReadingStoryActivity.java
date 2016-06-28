@@ -3,16 +3,19 @@ package bloople.net.stories;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 public class ReadingStoryActivity extends AppCompatActivity {
     private RecyclerView nodesView;
@@ -32,16 +35,8 @@ public class ReadingStoryActivity extends AppCompatActivity {
         Intent intent = getIntent();
         path = intent.getStringExtra(FilePickerActivity.RESULT_PATH);
 
-        final Story story = parseStory(path);
-        final NodesAdapter adapter = new NodesAdapter(story.nodes());
-        nodesView.setAdapter(adapter);
-
-        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
-        nodesView.scrollToPosition(preferences.getInt(path, 0));
-
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("last_path", path);
-        editor.apply();
+        ParseStoryTask parser = new ParseStoryTask();
+        parser.execute(path);
     }
 
     @Override
@@ -67,4 +62,26 @@ public class ReadingStoryActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    private class ParseStoryTask extends AsyncTask<String, Void, List<Node>> {
+        protected List<Node> doInBackground(String... paths) {
+            String path = paths[0];
+
+            final Story story = parseStory(path);
+            return story.nodes();
+        }
+
+        protected void onPostExecute(List<Node> nodes) {
+
+            final NodesAdapter adapter = new NodesAdapter(nodes);
+            nodesView.setAdapter(adapter);
+
+            View view = findViewById(R.id.loading_text);
+            view.setVisibility(View.GONE);
+
+            SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+            nodesView.scrollToPosition(preferences.getInt(path, 0));
+        }
+    }
+
 }

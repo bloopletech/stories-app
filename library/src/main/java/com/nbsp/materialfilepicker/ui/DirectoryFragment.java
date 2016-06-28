@@ -24,12 +24,9 @@ import java.io.File;
  * Created by Dimorinny on 24.10.15.
  */
 public class DirectoryFragment extends Fragment {
-    interface FileClickListener {
+    interface DirectoryFragmentListener {
+        void onFragmentLoaded(DirectoryFragment fragment);
         void onFileClicked(File clickedFile);
-    }
-
-    interface PickerStateListener {
-        void onPickerStateChanged(PickerState pickerState);
     }
 
     private static final String ARG_FILTER = "arg_filter";
@@ -41,22 +38,19 @@ public class DirectoryFragment extends Fragment {
 
     private EmptyRecyclerView mDirectoryRecyclerView;
     private DirectoryAdapter mDirectoryAdapter;
-    private FileClickListener mFileClickListener;
-    private PickerStateListener mPickerStateListener;
+    private DirectoryFragmentListener mListener;
 
     @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mFileClickListener = (FileClickListener) activity;
-        mPickerStateListener = (PickerStateListener) activity;
+        mListener = (DirectoryFragmentListener) activity;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mFileClickListener = null;
-        mPickerStateListener = null;
+        mListener = null;
     }
 
     public static DirectoryFragment getInstance(CompositeFilter filter, PickerState pickerState) {
@@ -92,9 +86,6 @@ public class DirectoryFragment extends Fragment {
                             mPickerState.setSortDirectionAsc(!mPickerState.isSortDirectionAsc());
                         }
 
-                        if (mPickerStateListener != null) {
-                            mPickerStateListener.onPickerStateChanged(mPickerState);
-                        }
                         initFilesList();
 
                         return true;
@@ -110,6 +101,7 @@ public class DirectoryFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initArgs();
+        mListener.onFragmentLoaded(this);
         initFilesList();
     }
 
@@ -122,14 +114,15 @@ public class DirectoryFragment extends Fragment {
     }
 
     private void initFilesList() {
-        mDirectoryAdapter = new DirectoryAdapter(getActivity(),
-                FileUtils.getFileListByDirPath(mFilter, mPickerState));
+        System.out.println("initFilesList current sort method: " + mPickerState.getSortMethod());
+        mDirectoryAdapter = new DirectoryAdapter(FileUtils.getFileListByDirPath(mFilter,
+                mPickerState));
 
         mDirectoryAdapter.setOnItemClickListener(new DirectoryAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (mFileClickListener != null) {
-                    mFileClickListener.onFileClicked(mDirectoryAdapter.getModel(position));
+                if (mListener != null) {
+                    mListener.onFileClicked(mDirectoryAdapter.getModel(position));
                 }
             }
         });
@@ -137,6 +130,10 @@ public class DirectoryFragment extends Fragment {
         mDirectoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDirectoryRecyclerView.setAdapter(mDirectoryAdapter);
         mDirectoryRecyclerView.setEmptyView(mEmptyView);
+    }
+
+    public PickerState getPickerState() {
+        return mPickerState;
     }
 
     @SuppressWarnings("unchecked")
