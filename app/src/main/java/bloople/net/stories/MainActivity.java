@@ -1,13 +1,12 @@
 package bloople.net.stories;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nbsp.materialfilepicker.MaterialFilePicker;
-import com.nbsp.materialfilepicker.ui.FilePickerActivity;
-import com.nbsp.materialfilepicker.utils.FileComparator;
-import com.nbsp.materialfilepicker.utils.PickerState;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -24,8 +23,9 @@ public class MainActivity extends AppCompatActivity {
         picker.withActivity(this).withClass(ReadingStoryActivity.class).withFilter(
                 Pattern.compile(".*\\.txt?"));
 
-        //if(lastPath != null) pickerState.setPath(new File(lastPath).getParentFile().toString());
-        //picker.withPickerState(pickerState);
+        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+        String lastPath = preferences.getString("last_path", null);
+        if (lastPath != null) picker.withPath(new File(lastPath).getParentFile().toString());
 
         picker.start();
     }

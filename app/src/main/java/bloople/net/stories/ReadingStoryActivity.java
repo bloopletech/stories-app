@@ -38,6 +38,10 @@ public class ReadingStoryActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
         nodesView.scrollToPosition(preferences.getInt(path, 0));
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("last_path", path);
+        editor.apply();
     }
 
     @Override
