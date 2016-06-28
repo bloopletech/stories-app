@@ -12,6 +12,9 @@ public class NodeFactory {
 
     public static Node heading(String content) {
         String[] elements = cleanString(content).split(" ", 2);
+
+        if(elements.length < 2) return new Paragraph(cleanString(content));
+
         //TODO check more carefully
         int level = elements[0].length();
         if(level > HEADER_SIZES.length) level = HEADER_SIZES.length;
