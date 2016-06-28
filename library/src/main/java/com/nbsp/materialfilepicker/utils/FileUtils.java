@@ -27,7 +27,8 @@ public class FileUtils {
     }
 
     public static String cutLastSegmentOfPath(String path) {
-        return path.substring(0, path.lastIndexOf("/"));
+        if(path.contains("/")) return path.substring(0, path.lastIndexOf("/"));
+        else return "/";
     }
 
     public static String getReadableFileSize(long size) {
