@@ -6,8 +6,8 @@
     android:focusable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="10dp"
-    android:paddingTop="5dp">
+    android:paddingBottom="7dp"
+    android:paddingTop="7dp">
 
     <ImageView
         android:id="@+id/item_file_image"
