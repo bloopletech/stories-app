@@ -17,7 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="net.bloople.stories.ReadingStoryActivity">
+        <activity android:name="net.bloople.stories.ReadingStoryActivity"
+            android:configChanges="orientation|screenSize">
 
         </activity>
     </application>
