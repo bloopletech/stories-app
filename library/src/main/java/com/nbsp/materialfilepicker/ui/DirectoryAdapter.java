@@ -81,7 +81,14 @@ public class DirectoryAdapter extends RecyclerView.Adapter<DirectoryAdapter.Dire
         holder.mFileImage.setImageResource(fileType.getIcon());
         holder.mFileSubtitle.setText(DATE_FORMAT.format(new Date(currentFile.lastModified())));
         holder.mFileTite.setText(currentFile.getName().replaceAll("\\.txt$", ""));
-        holder.mFileSize.setText(FileUtils.getReadableFileSize(currentFile.length()));
+
+        if(currentFile.isDirectory()) {
+            holder.mFileSize.setVisibility(View.GONE);
+        }
+        else {
+            holder.mFileSize.setText(FileUtils.getReadableFileSize(currentFile.length()));
+            holder.mFileSize.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
