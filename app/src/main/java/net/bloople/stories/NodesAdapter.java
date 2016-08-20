@@ -39,14 +39,12 @@ public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> 
 
         tv.setText(nodes.get(position).content());
 
-        if(position == 0) {
-            tv.setPadding(
-                    tv.getPaddingLeft(),
-                    tv.getPaddingBottom(),
-                    tv.getPaddingRight(),
-                    tv.getPaddingBottom()
-            );
-        }
+        tv.setPadding(
+            tv.getPaddingLeft(),
+            (position == 0 ? tv.getPaddingBottom() : 0),
+            tv.getPaddingRight(),
+            tv.getPaddingBottom()
+        );
     }
 
     // Return the size of your dataset (invoked by the layout manager)
