@@ -6,4 +6,20 @@
     tools:context="net.bloople.stories.MainActivity"
     android:background="#ffffff">
 
+    <Button
+        android:text="Index..."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:id="@+id/button" />
+
+    <Button
+        android:text="List Stories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:id="@+id/button2"
+        android:layout_centerInParent="true" />
 </RelativeLayout>

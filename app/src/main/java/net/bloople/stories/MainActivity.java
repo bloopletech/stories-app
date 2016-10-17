@@ -1,16 +1,16 @@
 package net.bloople.stories;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
-import com.nbsp.materialfilepicker.MaterialFilePicker;
-
-import java.util.regex.Pattern;
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     // Storage Permissions
@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    private boolean canAccessFiles;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,8 +29,27 @@ public class MainActivity extends AppCompatActivity {
 
         int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-        if(permission == PackageManager.PERMISSION_GRANTED) launchPicker();
+        canAccessFiles = false;
+        if(permission == PackageManager.PERMISSION_GRANTED) canAccessFiles = true;
         else ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+
+        Button indexButton = (Button)findViewById(R.id.button);
+        indexButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIndexing();
+            }
+        });
+
+        Button listStoriesButton = (Button)findViewById(R.id.button2);
+        listStoriesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -41,13 +62,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if(requestCode == REQUEST_EXTERNAL_STORAGE && grantResults.length > 0 &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED) launchPicker();
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) canAccessFiles = true;
     }
 
-    private void launchPicker() {
-        MaterialFilePicker picker = new MaterialFilePicker();
-        picker.withActivity(this).withClass(ReadingStoryActivity.class).withFilter(Pattern.compile(".*\\.txt?"));
-
-        picker.start();
+    public void startIndexing() {
+        if(canAccessFiles) {
+            new StoriesIndexer(this).indexDirectory(
+                    new File(Environment.getExternalStorageDirectory().getAbsolutePath())
+            );
+        }
     }
 }

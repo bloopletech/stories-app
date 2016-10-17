@@ -3,14 +3,14 @@ package net.bloople.stories;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
-import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -33,7 +33,14 @@ public class ReadingStoryActivity extends AppCompatActivity {
         nodesView.setLayoutManager(layoutManager);
 
         Intent intent = getIntent();
-        path = intent.getStringExtra(FilePickerActivity.RESULT_PATH);
+        long bookId = intent.getLongExtra("_id", -1);
+
+        SQLiteDatabase db = DatabaseHelper.instance(this);
+
+        Cursor result = db.rawQuery("SELECT path FROM books WHERE _id=?", new String[] { String.valueOf(bookId) });
+        result.moveToFirst();
+        path = result.getString(0);
+        System.out.println("path: " + path);
 
         ParseStoryTask parser = new ParseStoryTask();
         parser.execute(path);
