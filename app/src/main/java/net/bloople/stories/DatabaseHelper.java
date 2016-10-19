@@ -14,10 +14,11 @@ import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
  */
 
 public class DatabaseHelper {
+    public static final String DB_NAME = "books";
     private static SQLiteDatabase mInstance;
 
     public static SQLiteDatabase obtainDatabase(Context context) {
-        SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase("books",
+        SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DB_NAME,
                 Context.MODE_PRIVATE, null);
 
         db.execSQL("CREATE TABLE IF NOT EXISTS books ( " +
@@ -38,6 +39,11 @@ public class DatabaseHelper {
         }
 
         return mInstance;
+    }
+
+    public static void deleteDatabase(Context context) {
+        context.getApplicationContext().deleteDatabase(DB_NAME);
+        mInstance = null;
     }
 
     private SQLiteDatabase db;

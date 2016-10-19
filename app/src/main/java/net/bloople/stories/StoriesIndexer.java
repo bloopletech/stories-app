@@ -24,14 +24,9 @@ public class StoriesIndexer {
                 indexDirectory(f);
             }
             else {
-                System.out.println("name: " + f.getName());
                 String name = f.getName();
                 String ext = name.substring(name.lastIndexOf('.') + 1);
-                System.out.println("ext: " + ext);
 
-
-                System.out.println("name: " + f.getName());
-                System.out.println("ext: " + ext);
                 if(ext.equals("txt")) indexFile(f);
             }
         }
@@ -39,13 +34,11 @@ public class StoriesIndexer {
 
     public void indexFile(File file) {
         try {
-            System.out.println("Indexing file " + file);
-
             DatabaseHelper helper = new DatabaseHelper(context);
 
             ContentValues values = new ContentValues();
             values.put("path", file.getCanonicalPath());
-            values.put("title", file.getName());
+            values.put("title", file.getName().replaceAll("\\.txt$", ""));
             values.put("mtime", file.lastModified());
             values.put("size", file.length());
 

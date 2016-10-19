@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         if(permission == PackageManager.PERMISSION_GRANTED) canAccessFiles = true;
         else ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
 
-        Button indexButton = (Button)findViewById(R.id.button);
+        Button indexButton = (Button)findViewById(R.id.index_button);
         indexButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,7 +41,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button listStoriesButton = (Button)findViewById(R.id.button2);
+        Button deleteIndexButton = (Button)findViewById(R.id.delete_index_button);
+        deleteIndexButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHelper.deleteDatabase(MainActivity.this);
+            }
+        });
+
+        Button listStoriesButton = (Button)findViewById(R.id.list_stories_button);
         listStoriesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
 
     }
 
