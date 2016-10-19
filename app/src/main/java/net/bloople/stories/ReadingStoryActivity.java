@@ -1,8 +1,7 @@
 package net.bloople.stories;
 
-import android.content.Context;
+import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -20,6 +19,7 @@ import java.util.List;
 public class ReadingStoryActivity extends AppCompatActivity {
     private RecyclerView nodesView;
     private LinearLayoutManager layoutManager;
+    private long bookId;
     private String path = null;
 
     @Override
@@ -33,7 +33,7 @@ public class ReadingStoryActivity extends AppCompatActivity {
         nodesView.setLayoutManager(layoutManager);
 
         Intent intent = getIntent();
-        long bookId = intent.getLongExtra("_id", -1);
+        bookId = intent.getLongExtra("_id", -1);
 
         SQLiteDatabase db = DatabaseHelper.instance(this);
 
@@ -50,10 +50,11 @@ public class ReadingStoryActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(path, layoutManager.findFirstVisibleItemPosition());
-        editor.apply();
+        SQLiteDatabase db = DatabaseHelper.instance(this);
+        ContentValues values = new ContentValues();
+        values.put("last_read_position", layoutManager.findFirstVisibleItemPosition());
+
+        db.update("books", values, "_id=?", new String[] { String.valueOf(bookId) });
     }
 
     private static Story parseStory(String path) {
@@ -86,8 +87,12 @@ public class ReadingStoryActivity extends AppCompatActivity {
             View view = findViewById(R.id.loading_text);
             view.setVisibility(View.GONE);
 
-            SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
-            nodesView.scrollToPosition(preferences.getInt(path, 0));
+            SQLiteDatabase db = DatabaseHelper.instance(ReadingStoryActivity.this);
+
+            Cursor result = db.rawQuery("SELECT last_read_position FROM books WHERE _id=?", new String[] { String.valueOf(bookId) });
+            result.moveToFirst();
+
+            nodesView.scrollToPosition(result.getInt(0));
         }
     }
 

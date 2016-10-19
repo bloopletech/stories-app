@@ -5,10 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.io.File;
-
-import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
-
 /**
  * Created by i on 19/10/2016.
  */
@@ -27,7 +23,8 @@ public class DatabaseHelper {
                 "title TEXT, " +
                 "mtime INT DEFAULT 0, " +
                 "size INTEGER DEFAULT 0, " +
-                "last_opened_at INTEGER DEFAULT 0" +
+                "last_opened_at INTEGER DEFAULT 0, " +
+                "last_read_position INTEGER DEFAULT 0" +
                 ")");
 
         return db;
