@@ -1,12 +1,12 @@
 package net.bloople.stories;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -16,7 +16,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-public class ReadingStoryActivity extends AppCompatActivity {
+public class ReadingStoryActivity extends Activity {
     private RecyclerView nodesView;
     private LinearLayoutManager layoutManager;
     private long bookId;

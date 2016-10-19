@@ -1,18 +1,17 @@
 package net.bloople.stories;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -27,11 +26,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(android.os.Build.VERSION.SDK_INT >= 23) {
+            int permission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-        canAccessFiles = false;
-        if(permission == PackageManager.PERMISSION_GRANTED) canAccessFiles = true;
-        else ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+            canAccessFiles = false;
+            if(permission == PackageManager.PERMISSION_GRANTED) canAccessFiles = true;
+            else requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+        }
+        else {
+            canAccessFiles = true;
+        }
 
         Button indexButton = (Button)findViewById(R.id.index_button);
         indexButton.setOnClickListener(new View.OnClickListener() {
