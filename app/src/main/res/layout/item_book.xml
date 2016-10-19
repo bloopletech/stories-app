@@ -2,7 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
     <TextView
         android:id="@+id/story_title"
         android:layout_width="match_parent"
@@ -10,61 +14,55 @@
         android:textSize="18sp"
         android:textColor="#000000"
         android:textAlignment="viewStart"
-        android:paddingTop="7dp"
         android:paddingBottom="3dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp" />
+        android:paddingRight="8dp" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.7">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/story_size"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="#000000"
+            android:textSize="14sp"
+            android:textColor="#808080"
             android:textAlignment="viewStart"
-            android:paddingTop="3dp"
-            android:paddingBottom="7dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_weight="0.16"
+            android:paddingRight="8dp"
+            android:layout_weight="0.1"
             android:layout_gravity="center"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
         <TextView
             android:id="@+id/story_last_opened"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="#000000"
+            android:textSize="14sp"
+            android:textColor="#808080"
             android:textAlignment="viewStart"
-            android:paddingTop="3dp"
-            android:paddingBottom="7dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_weight="0.42"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_weight="0.25"
             android:layout_gravity="center"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
         <TextView
             android:id="@+id/story_age"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="#000000"
+            android:textSize="14sp"
+            android:textColor="#808080"
             android:textAlignment="viewStart"
-            android:paddingTop="3dp"
-            android:paddingBottom="7dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_weight="0.42"
+            android:paddingLeft="8dp"
+            android:layout_weight="0.25"
             android:layout_gravity="center"
-            android:singleLine="true" />
+            android:maxLines="1" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4" />
 
     </LinearLayout>
 

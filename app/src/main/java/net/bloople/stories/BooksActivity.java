@@ -123,6 +123,8 @@ public class BooksActivity extends Activity {
         if(sortDirectionAsc) orderBy += " ASC";
         else orderBy += " DESC";
 
+        orderBy += ", title ASC";
+
         SearchBooksTask searcher = new SearchBooksTask();
         searcher.execute(orderBy);
     }

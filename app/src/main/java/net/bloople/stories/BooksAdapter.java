@@ -55,7 +55,7 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
         }
     }
 
-    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d MMMM yyyy h:mm a",
+    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d MMMM yyyy",
             Locale.getDefault());
     private Activity activity;
 
@@ -88,10 +88,10 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
         long lastOpenedMillis = cursor.getLong(cursor.getColumnIndex("last_opened_at"));
         if(lastOpenedMillis > 0L) {
             String lastOpened = DATE_FORMAT.format(new Date(lastOpenedMillis));
-            holder.lastOpenedView.setText("Opened: " + lastOpened);
+            holder.lastOpenedView.setText("Read: " + lastOpened);
         }
         else {
-            holder.lastOpenedView.setText("Opened: Never");
+            holder.lastOpenedView.setText("Read: Never");
         }
     }
 
