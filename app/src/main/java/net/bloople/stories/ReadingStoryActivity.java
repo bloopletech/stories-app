@@ -40,7 +40,7 @@ public class ReadingStoryActivity extends Activity {
         Cursor result = db.rawQuery("SELECT path FROM books WHERE _id=?", new String[] { String.valueOf(bookId) });
         result.moveToFirst();
         path = result.getString(0);
-        System.out.println("path: " + path);
+        result.close();
 
         ParseStoryTask parser = new ParseStoryTask();
         parser.execute(path);
@@ -93,6 +93,8 @@ public class ReadingStoryActivity extends Activity {
             result.moveToFirst();
 
             nodesView.scrollToPosition(result.getInt(0));
+
+            result.close();
         }
     }
 
