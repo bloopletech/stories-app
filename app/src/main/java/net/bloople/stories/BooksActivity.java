@@ -1,61 +1,40 @@
 package net.bloople.stories;
 
 import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
-public class ListActivity extends Activity {
+public class BooksActivity extends Activity {
     public static final int SORT_ALPHABETIC = 0;
     public static final int SORT_AGE = 1;
     public static final int SORT_SIZE = 2;
     public static final int SORT_LAST_OPENED = 3;
 
-    private SimpleCursorAdapter adapter;
     private boolean sortDirectionAsc = true;
     private int sortMethod = SORT_ALPHABETIC;
+
+    private RecyclerView listView;
+    private LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
+        setContentView(R.layout.activity_books);
 
-        adapter = new SimpleCursorAdapter(
-                this,
-                R.layout.list_item,
-                null,
-                new String[] { "title", "size", "mtime", "last_opened_at" },
-                new int[] { R.id.story_title, R.id.story_size, R.id.story_age, R.id.story_last_opened },
-                0
-        );
+        listView = (RecyclerView)findViewById(R.id.stories_list);
+
+        layoutManager = new LinearLayoutManager(this);
+        listView.setLayoutManager(layoutManager);
+
         updateCursor();
-
-        ListView listView = (ListView) findViewById(R.id.stories_list);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SQLiteDatabase db = DatabaseHelper.instance(ListActivity.this);
-
-                ContentValues values = new ContentValues();
-                values.put("last_opened_at", System.currentTimeMillis());
-
-                db.update("books", values, "_id=?", new String[] { String.valueOf(id) });
-
-                Intent intent = new Intent(ListActivity.this, ReadingStoryActivity.class);
-                intent.putExtra("_id", id);
-
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -119,7 +98,24 @@ public class ListActivity extends Activity {
         if(sortDirectionAsc) orderBy += " ASC";
         else orderBy += " DESC";
 
-        SQLiteDatabase db = DatabaseHelper.instance(this);
-        adapter.changeCursor(db.query("books", null, null, null, null, null, orderBy));
+        SearchBooksTask searcher = new SearchBooksTask();
+        searcher.execute(orderBy);
+    }
+
+    private class SearchBooksTask extends AsyncTask<String, Void, Cursor> {
+        protected Cursor doInBackground(String... ordersBy) {
+            String orderBy = ordersBy[0];
+
+            SQLiteDatabase db = DatabaseHelper.instance(BooksActivity.this);
+            Cursor cursor = db.query("books", null, null, null, null, null, orderBy);
+            cursor.moveToFirst();
+
+            return cursor;
+        }
+
+        protected void onPostExecute(Cursor cursor) {
+            BooksAdapter adapter = new BooksAdapter(cursor, BooksActivity.this);
+            listView.setAdapter(adapter);
+        }
     }
 }
