@@ -2,18 +2,21 @@ package net.bloople.stories;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.File;
-
-import static android.R.attr.duration;
 
 public class MainActivity extends Activity {
     // Storage Permissions
@@ -23,6 +26,7 @@ public class MainActivity extends Activity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    private String indexRoot;
     private boolean canAccessFiles;
 
     @Override
@@ -41,7 +45,7 @@ public class MainActivity extends Activity {
             canAccessFiles = true;
         }
 
-        Button indexButton = (Button)findViewById(R.id.index_button);
+        final Button indexButton = (Button)findViewById(R.id.index_button);
         indexButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +71,26 @@ public class MainActivity extends Activity {
             }
         });
 
+        loadPreferences();
+
+        EditText indexDirectoryText = (EditText)findViewById(R.id.index_directory);
+        indexDirectoryText.setText(indexRoot);
+        indexDirectoryText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                indexRoot = s.toString();
+                savePreferences();
+            }
+        });
+
 
     }
 
@@ -83,6 +107,23 @@ public class MainActivity extends Activity {
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) canAccessFiles = true;
     }
 
+    private SharedPreferences preferences() {
+        return getApplicationContext().getSharedPreferences("main", Context.MODE_PRIVATE);
+    }
+
+    private void loadPreferences() {
+        SharedPreferences preferences = preferences();
+
+        indexRoot = preferences.getString("index-root",
+                Environment.getExternalStorageDirectory().getAbsolutePath());
+    }
+
+    private void savePreferences() {
+        SharedPreferences.Editor editor = preferences().edit();
+        editor.putString("index-root", indexRoot);
+        editor.apply();
+    }
+
     public void startIndexing() {
         if(canAccessFiles) {
             IndexingTask indexer = new IndexingTask();
@@ -93,9 +134,7 @@ public class MainActivity extends Activity {
     private class IndexingTask extends AsyncTask<Void, Void, Integer> {
         protected Integer doInBackground(Void... params) {
             StoriesIndexer indexer = new StoriesIndexer(MainActivity.this);
-            indexer.indexDirectory(
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath())
-            );
+            indexer.indexDirectory(new File(indexRoot));
 
             return indexer.count();
         }

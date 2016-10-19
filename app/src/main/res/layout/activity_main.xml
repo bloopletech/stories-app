@@ -2,25 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="net.bloople.stories.MainActivity"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    android:orientation="vertical">
 
     <Button
         android:text="Index..."
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/index_button" />
+        android:id="@+id/index_button"
+        android:layout_gravity="center" />
 
     <Button
         android:text="Delete Index"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/delete_index_button" />
+        android:id="@+id/delete_index_button"
+        android:layout_gravity="center" />
 
     <Button
         android:text="List Stories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/list_stories_button" />
+        android:id="@+id/list_stories_button"
+        android:layout_gravity="center" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/index_directory"
+        android:layout_weight="1"
+        android:inputType="text"
+        android:maxLines="1" />
 </LinearLayout>

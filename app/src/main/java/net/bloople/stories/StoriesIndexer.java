@@ -20,6 +20,8 @@ public class StoriesIndexer {
     public void indexDirectory(File directory) {
         File[] files = directory.listFiles();
 
+        if(files == null) return;
+
         for(File f : files) {
             if(f.isDirectory()) {
                 indexDirectory(f);
