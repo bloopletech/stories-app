@@ -17,8 +17,8 @@ public class DatabaseHelper {
     private static SQLiteDatabase mInstance;
 
     public static SQLiteDatabase obtainDatabase(Context context) {
-        File dbFile = context.getApplicationContext().getDatabasePath("books");
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
+        SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase("books",
+                Context.MODE_PRIVATE, null);
 
         db.execSQL("CREATE TABLE IF NOT EXISTS books ( " +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
