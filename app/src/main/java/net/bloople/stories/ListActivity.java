@@ -1,5 +1,6 @@
 package net.bloople.stories;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -29,6 +30,13 @@ public class ListActivity extends AppCompatActivity {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SQLiteDatabase db = DatabaseHelper.instance(ListActivity.this);
+
+                ContentValues values = new ContentValues();
+                values.put("last_opened_at", System.currentTimeMillis());
+
+                db.update("books", values, "_id=?", new String[] { String.valueOf(id) });
+
                 Intent intent = new Intent(ListActivity.this, ReadingStoryActivity.class);
                 intent.putExtra("_id", id);
 
