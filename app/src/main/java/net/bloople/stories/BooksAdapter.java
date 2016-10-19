@@ -11,6 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by i on 19/10/2016.
  */
@@ -50,6 +55,8 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
         }
     }
 
+    private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d MMMM yyyy h:mm a",
+            Locale.getDefault());
     private Activity activity;
 
     public BooksAdapter(Cursor cursor, Activity inActivity) {
@@ -70,8 +77,30 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
     @Override
     public void onBindViewHolder(BooksAdapter.ViewHolder holder, Cursor cursor) {
         holder.titleView.setText(cursor.getString(cursor.getColumnIndex("title")));
-        holder.sizeView.setText(cursor.getString(cursor.getColumnIndex("size")));
-        holder.ageView.setText(cursor.getString(cursor.getColumnIndex("mtime")));
-        holder.lastOpenedView.setText(cursor.getString(cursor.getColumnIndex("last_opened_at")));
+
+        int sizeRaw = cursor.getInt(cursor.getColumnIndex("size"));
+        holder.sizeView.setText(getReadableFileSize(sizeRaw));
+
+        long ageMillis = cursor.getLong(cursor.getColumnIndex("mtime"));
+        String age = DATE_FORMAT.format(new Date(ageMillis));
+        holder.ageView.setText("Modified: " + age);
+
+        long lastOpenedMillis = cursor.getLong(cursor.getColumnIndex("last_opened_at"));
+        if(lastOpenedMillis > 0L) {
+            String lastOpened = DATE_FORMAT.format(new Date(lastOpenedMillis));
+            holder.lastOpenedView.setText("Opened: " + lastOpened);
+        }
+        else {
+            holder.lastOpenedView.setText("Opened: Never");
+        }
+
+    }
+
+    //Copied from https://github.com/nbsp-team/MaterialFilePicker
+    public static String getReadableFileSize(long size) {
+        if (size <= 0) return "0";
+        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return new DecimalFormat("#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 }

@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="net.bloople.stories.ReadingStoryActivity"
-    android:background="#ffffff"
-    android:theme="@style/NoActionBar">
+    android:background="#ffffff">
 
     <TextView
         android:layout_width="fill_parent"
