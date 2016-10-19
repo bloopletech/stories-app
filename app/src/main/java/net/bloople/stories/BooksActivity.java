@@ -9,9 +9,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class BooksActivity extends Activity {
     public static final int SORT_ALPHABETIC = 0;
@@ -21,6 +27,7 @@ public class BooksActivity extends Activity {
 
     private int sortMethod;
     private boolean sortDirectionAsc;
+    private String searchText = "";
 
     private RecyclerView listView;
     private LinearLayoutManager layoutManager;
@@ -57,6 +64,29 @@ public class BooksActivity extends Activity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.list_menu, menu);
+
+        View searchView = menu.findItem(R.id.search).getActionView();
+        final EditText searchField = (EditText)searchView.findViewById(R.id.searchText);
+
+        searchField.setMaxWidth(Integer.MAX_VALUE);
+
+        searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if(actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    InputMethodManager in = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+                    searchField.clearFocus();
+
+                    searchText = v.getText().toString();
+                    updateCursor();
+
+                    handled = true;
+                }
+                return handled;
+            }
+        });
 
         return true;
     }
@@ -126,15 +156,25 @@ public class BooksActivity extends Activity {
         orderBy += ", title ASC";
 
         SearchBooksTask searcher = new SearchBooksTask();
-        searcher.execute(orderBy);
+        searcher.execute(searchText, orderBy);
     }
 
     private class SearchBooksTask extends AsyncTask<String, Void, Cursor> {
-        protected Cursor doInBackground(String... ordersBy) {
-            String orderBy = ordersBy[0];
+        protected Cursor doInBackground(String... params) {
+            String searchText = params[0];
+            String orderBy = params[1];
 
             SQLiteDatabase db = DatabaseHelper.instance(BooksActivity.this);
-            Cursor cursor = db.query("books", null, null, null, null, null, orderBy);
+
+            Cursor cursor = null;
+            if(!searchText.equals("")) {
+                cursor = db.query("books", null, "title LIKE ?",
+                        new String[] { "%" + searchText + "%" }, null, null, orderBy);
+            }
+            else {
+                cursor = db.query("books", null, null, null, null, null, orderBy);
+            }
+
             cursor.moveToFirst();
 
             return cursor;

@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/search"
+        android:title="Search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:showAsAction="collapseActionView|always"
+        android:actionLayout="@layout/search" />
 
     <item
         android:id="@+id/sort_alphabetic"
         android:title="Name"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="always"/>
     <item
         android:id="@+id/sort_size"
         android:title="Size"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="always"/>
     <item
         android:id="@+id/sort_age"
         android:title="Age"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="always"/>
     <item
         android:id="@+id/sort_last_opened"
         android:title="Last Opened"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="always"/>
     <item
         android:id="@+id/sort_direction"
         android:title="Dir"
