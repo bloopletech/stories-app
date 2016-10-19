@@ -1,10 +1,11 @@
 package net.bloople.stories;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,8 +19,8 @@ public class BooksActivity extends Activity {
     public static final int SORT_SIZE = 2;
     public static final int SORT_LAST_OPENED = 3;
 
-    private boolean sortDirectionAsc = true;
-    private int sortMethod = SORT_ALPHABETIC;
+    private int sortMethod;
+    private boolean sortDirectionAsc;
 
     private RecyclerView listView;
     private LinearLayoutManager layoutManager;
@@ -33,15 +34,21 @@ public class BooksActivity extends Activity {
 
         layoutManager = new LinearLayoutManager(this);
         listView.setLayoutManager(layoutManager);
-
-        updateCursor();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+        loadPreferences();
         updateCursor();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        savePreferences();
     }
 
     @Override
@@ -75,6 +82,24 @@ public class BooksActivity extends Activity {
         updateCursor();
 
         return true;
+    }
+
+    private SharedPreferences preferences() {
+        return getApplicationContext().getSharedPreferences("books-list", Context.MODE_PRIVATE);
+    }
+
+    private void loadPreferences() {
+        SharedPreferences preferences = preferences();
+
+        sortMethod = preferences.getInt("last-sort-method", SORT_LAST_OPENED);
+        sortDirectionAsc = preferences.getBoolean("last-sort-direction-asc", false);
+    }
+
+    private void savePreferences() {
+        SharedPreferences.Editor editor = preferences().edit();
+        editor.putInt("last-sort-method", sortMethod);
+        editor.putBoolean("last-sort-direction-asc", sortDirectionAsc);
+        editor.apply();
     }
 
     private void updateCursor() {

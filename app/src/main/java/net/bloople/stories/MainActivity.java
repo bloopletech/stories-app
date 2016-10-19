@@ -4,12 +4,16 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.File;
+
+import static android.R.attr.duration;
 
 public class MainActivity extends Activity {
     // Storage Permissions
@@ -50,6 +54,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 DatabaseHelper.deleteDatabase(MainActivity.this);
+                Toast.makeText(MainActivity.this, "Index deleted.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -80,9 +85,25 @@ public class MainActivity extends Activity {
 
     public void startIndexing() {
         if(canAccessFiles) {
-            new StoriesIndexer(this).indexDirectory(
+            IndexingTask indexer = new IndexingTask();
+            indexer.execute();
+        }
+    }
+
+    private class IndexingTask extends AsyncTask<Void, Void, Integer> {
+        protected Integer doInBackground(Void... params) {
+            StoriesIndexer indexer = new StoriesIndexer(MainActivity.this);
+            indexer.indexDirectory(
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath())
             );
+
+            return indexer.count();
         }
+
+        protected void onPostExecute(Integer count) {
+            Toast.makeText(MainActivity.this, "Indexing complete, " + count + " stories indexed.",
+                    Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

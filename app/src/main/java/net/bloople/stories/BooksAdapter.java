@@ -93,7 +93,6 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
         else {
             holder.lastOpenedView.setText("Opened: Never");
         }
-
     }
 
     //Copied from https://github.com/nbsp-team/MaterialFilePicker

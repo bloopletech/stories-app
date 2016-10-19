@@ -11,6 +11,7 @@ import java.io.IOException;
  */
 public class StoriesIndexer {
     private Context context;
+    private int indexed;
 
     public StoriesIndexer(Context inContext) {
         context = inContext;
@@ -43,9 +44,14 @@ public class StoriesIndexer {
             values.put("size", file.length());
 
             helper.upsertBook(values);
+            indexed++;
         }
         catch(IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int count() {
+        return indexed;
     }
 }
