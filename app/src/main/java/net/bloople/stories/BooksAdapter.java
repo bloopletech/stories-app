@@ -9,10 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
-
-import static android.R.attr.id;
 
 /**
  * Created by i on 19/10/2016.
@@ -63,7 +60,7 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
     // Create new views (invoked by the layout manager)
     @Override
     public BooksAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent,
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent,
                 false);
 
         return new BooksAdapter.ViewHolder(view, activity);
