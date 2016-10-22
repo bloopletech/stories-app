@@ -30,7 +30,7 @@
             android:textColor="#808080"
             android:textAlignment="viewStart"
             android:paddingRight="8dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.1"
             android:layout_gravity="center"
             android:maxLines="1" />
 
@@ -43,10 +43,26 @@
             android:textAlignment="viewStart"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.25"
             android:layout_gravity="center"
             android:maxLines="1" />
 
+        <TextView
+            android:id="@+id/story_age"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#808080"
+            android:textAlignment="viewStart"
+            android:paddingLeft="8dp"
+            android:layout_weight="0.25"
+            android:layout_gravity="center"
+            android:maxLines="1" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4" />
 
     </LinearLayout>
 
