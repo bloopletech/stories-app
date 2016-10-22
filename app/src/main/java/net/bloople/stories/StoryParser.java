@@ -12,7 +12,7 @@ public class StoryParser {
 
     public StoryParser(Reader reader) {
         scanner = new Scanner(reader);
-        scanner.useDelimiter("(?:\r?\n){2,}+");
+        scanner.useDelimiter("(?:\r?\n[\u200B\uFEFF]*){2,}+");
     }
 
     public boolean hasNext() throws IOException {
