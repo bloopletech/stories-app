@@ -6,16 +6,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReadingStoryActivity extends Activity {
     private RecyclerView nodesView;
     private LinearLayoutManager layoutManager;
+    private NodesAdapter adapter;
     private Book book;
 
     @Override
@@ -27,6 +28,9 @@ public class ReadingStoryActivity extends Activity {
 
         layoutManager = new LinearLayoutManager(this);
         nodesView.setLayoutManager(layoutManager);
+
+        adapter = new NodesAdapter();
+        nodesView.setAdapter(adapter);
 
         Intent intent = getIntent();
         book = Book.findById(this, intent.getLongExtra("_id", -1));
@@ -43,21 +47,45 @@ public class ReadingStoryActivity extends Activity {
         book.save(this);
     }
 
-    private class ParseStoryTask extends AsyncTask<Book, Void, List<Node>> {
-        protected List<Node> doInBackground(Book... books) {
-            Book book = books[0];
-            return book.story().nodes();
+    private class ParseStoryTask extends AsyncTask<Book, List<Node>, Void> {
+        public int BATCH_SIZE = 50;
+        private boolean setPosition = false;
+
+        protected Void doInBackground(Book... bookArgs) {
+            Book book = bookArgs[0];
+
+            try {
+                StoryParser parser = new StoryParser(new BufferedReader(new FileReader(book.path())));
+
+                List<Node> accumulator = new ArrayList<>();
+                while(parser.hasNext()) {
+                    accumulator.add(parser.next());
+
+                    if(accumulator.size() >= BATCH_SIZE) {
+                        publishProgress(accumulator);
+                        accumulator = new ArrayList<>();
+                    }
+                }
+
+                publishProgress(accumulator);
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
         }
 
-        protected void onPostExecute(List<Node> nodes) {
+        protected void onProgressUpdate(List<Node>... nodesArgs) {
+            adapter.addAll(nodesArgs[0]);
 
-            final NodesAdapter adapter = new NodesAdapter(nodes);
-            nodesView.setAdapter(adapter);
+            if(!setPosition && (adapter.getItemCount() >= book.lastReadPosition())) {
+                setPosition = true;
+                nodesView.scrollToPosition(book.lastReadPosition());
+            }
+        }
 
-            View view = findViewById(R.id.loading_text);
-            view.setVisibility(View.GONE);
-
-            nodesView.scrollToPosition(book.lastReadPosition());
+        protected void onPostExecute(Void result) {
         }
     }
 

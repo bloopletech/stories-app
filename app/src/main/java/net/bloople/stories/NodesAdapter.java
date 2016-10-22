@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
@@ -19,8 +20,13 @@ public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> 
         }
     }
 
-    public NodesAdapter(List<Node> inNodes) {
-        nodes = inNodes;
+    public NodesAdapter() {
+        nodes = new ArrayList<>();
+    }
+
+    public void addAll(List<Node> newNodes) {
+        nodes.addAll(newNodes);
+        notifyItemRangeInserted(nodes.size() - 1, newNodes.size());
     }
 
     // Create new views (invoked by the layout manager)

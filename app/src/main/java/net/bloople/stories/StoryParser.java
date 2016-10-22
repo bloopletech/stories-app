@@ -15,10 +15,8 @@ public class StoryParser {
         scanner.useDelimiter("(?:\r?\n){2,}+");
     }
 
-    public void parse(Story story) throws IOException {
-        while(scanner.hasNext()) {
-            story.add(next());
-        }
+    public boolean hasNext() throws IOException {
+        return scanner.hasNext();
     }
 
     public Node next() throws IOException {
