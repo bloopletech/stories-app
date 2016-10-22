@@ -43,7 +43,7 @@ public class ReadingStoryActivity extends Activity {
     protected void onStop() {
         super.onStop();
 
-        book.lastReadPosition(layoutManager.findFirstCompletelyVisibleItemPosition());
+        book.lastReadPosition(layoutManager.findFirstVisibleItemPosition());
         book.save(this);
     }
 
