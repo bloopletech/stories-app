@@ -1,5 +1,8 @@
 package net.bloople.stories;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,5 +22,19 @@ public class Story {
 
     public List<Node> nodes() {
         return nodes;
+    }
+
+    public static Story parseStory(String path) {
+        try {
+            Story story = new Story();
+            StoryParser parser = new StoryParser(new BufferedReader(new FileReader(path)));
+            parser.parse(story);
+
+            return story;
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -32,7 +32,7 @@ public class ReadingStoryActivity extends Activity {
         book = Book.findById(this, intent.getLongExtra("_id", -1));
 
         ParseStoryTask parser = new ParseStoryTask();
-        parser.execute(book.path());
+        parser.execute(book);
     }
 
     @Override
@@ -43,26 +43,10 @@ public class ReadingStoryActivity extends Activity {
         book.save(this);
     }
 
-    private static Story parseStory(String path) {
-        try {
-            Story story = new Story();
-            StoryParser parser = new StoryParser(new BufferedReader(new FileReader(path)));
-            parser.parse(story);
-
-            return story;
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private class ParseStoryTask extends AsyncTask<String, Void, List<Node>> {
-        protected List<Node> doInBackground(String... paths) {
-            String path = paths[0];
-
-            final Story story = parseStory(path);
-            return story.nodes();
+    private class ParseStoryTask extends AsyncTask<Book, Void, List<Node>> {
+        protected List<Node> doInBackground(Book... books) {
+            Book book = books[0];
+            return book.story().nodes();
         }
 
         protected void onPostExecute(List<Node> nodes) {

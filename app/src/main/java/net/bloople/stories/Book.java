@@ -129,4 +129,8 @@ public class Book {
             db.update("books", values, "_id=?", new String[] { String.valueOf(_id) });
         }
     }
+
+    public Story story() {
+        return Story.parseStory(path);
+    }
 }
