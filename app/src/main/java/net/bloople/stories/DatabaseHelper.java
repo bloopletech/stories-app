@@ -42,29 +42,4 @@ public class DatabaseHelper {
         context.getApplicationContext().deleteDatabase(DB_NAME);
         mInstance = null;
     }
-
-    private SQLiteDatabase db;
-
-    public DatabaseHelper(Context context) {
-        db = instance(context);
-    }
-
-    public void upsertBook(ContentValues values) {
-        String path = values.getAsString("path");
-
-        Cursor result = db.rawQuery("SELECT _id FROM books WHERE path=?", new String[] { path });
-        result.moveToFirst();
-
-        if(result.getCount() > 0) {
-            long bookId = result.getLong(0);
-            db.update("books", values, "_id=?", new String[] { String.valueOf(bookId) });
-        }
-        else {
-            db.insert("books", null, values);
-        }
-
-        result.close();
-    }
-
-
 }

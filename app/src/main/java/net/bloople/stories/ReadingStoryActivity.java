@@ -1,10 +1,7 @@
 package net.bloople.stories;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,8 +16,7 @@ import java.util.List;
 public class ReadingStoryActivity extends Activity {
     private RecyclerView nodesView;
     private LinearLayoutManager layoutManager;
-    private long bookId;
-    private String path = null;
+    private Book book;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,28 +29,18 @@ public class ReadingStoryActivity extends Activity {
         nodesView.setLayoutManager(layoutManager);
 
         Intent intent = getIntent();
-        bookId = intent.getLongExtra("_id", -1);
-
-        SQLiteDatabase db = DatabaseHelper.instance(this);
-
-        Cursor result = db.rawQuery("SELECT path FROM books WHERE _id=?", new String[] { String.valueOf(bookId) });
-        result.moveToFirst();
-        path = result.getString(0);
-        result.close();
+        book = Book.findById(this, intent.getLongExtra("_id", -1));
 
         ParseStoryTask parser = new ParseStoryTask();
-        parser.execute(path);
+        parser.execute(book.path());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        SQLiteDatabase db = DatabaseHelper.instance(this);
-        ContentValues values = new ContentValues();
-        values.put("last_read_position", layoutManager.findFirstVisibleItemPosition());
-
-        db.update("books", values, "_id=?", new String[] { String.valueOf(bookId) });
+        book.lastReadPosition(layoutManager.findFirstVisibleItemPosition());
+        book.save(this);
     }
 
     private static Story parseStory(String path) {
@@ -87,14 +73,7 @@ public class ReadingStoryActivity extends Activity {
             View view = findViewById(R.id.loading_text);
             view.setVisibility(View.GONE);
 
-            SQLiteDatabase db = DatabaseHelper.instance(ReadingStoryActivity.this);
-
-            Cursor result = db.rawQuery("SELECT last_read_position FROM books WHERE _id=?", new String[] { String.valueOf(bookId) });
-            result.moveToFirst();
-
-            nodesView.scrollToPosition(result.getInt(0));
-
-            result.close();
+            nodesView.scrollToPosition(book.lastReadPosition());
         }
     }
 

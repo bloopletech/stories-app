@@ -1,10 +1,8 @@
 package net.bloople.stories;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,12 +32,9 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
                 public void onClick(View v) {
                     long id = getItemId();
 
-                    SQLiteDatabase db = DatabaseHelper.instance(activity);
-
-                    ContentValues values = new ContentValues();
-                    values.put("last_opened_at", System.currentTimeMillis());
-
-                    db.update("books", values, "_id=?", new String[] { String.valueOf(id) });
+                    Book book = Book.findById(activity, id);
+                    book.lastOpenedAt(System.currentTimeMillis());
+                    book.save(activity);
 
                     Intent intent = new Intent(activity, ReadingStoryActivity.class);
                     intent.putExtra("_id", id);
@@ -76,16 +71,16 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(BooksAdapter.ViewHolder holder, Cursor cursor) {
-        holder.titleView.setText(cursor.getString(cursor.getColumnIndex("title")));
+        Book book = new Book(cursor);
 
-        int sizeRaw = cursor.getInt(cursor.getColumnIndex("size"));
-        holder.sizeView.setText(getReadableFileSize(sizeRaw));
+        holder.titleView.setText(book.title());
 
-        long ageMillis = cursor.getLong(cursor.getColumnIndex("mtime"));
-        String age = DATE_FORMAT.format(new Date(ageMillis));
+        holder.sizeView.setText(getReadableFileSize(book.size()));
+
+        String age = DATE_FORMAT.format(new Date(book.mtime()));
         holder.ageView.setText("Modified: " + age);
 
-        long lastOpenedMillis = cursor.getLong(cursor.getColumnIndex("last_opened_at"));
+        long lastOpenedMillis = book.lastOpenedAt();
         if(lastOpenedMillis > 0L) {
             String lastOpened = DATE_FORMAT.format(new Date(lastOpenedMillis));
             holder.lastOpenedView.setText("Read: " + lastOpened);

@@ -166,7 +166,7 @@ public class BooksActivity extends Activity {
 
             SQLiteDatabase db = DatabaseHelper.instance(BooksActivity.this);
 
-            Cursor cursor = null;
+            Cursor cursor;
             if(!searchText.equals("")) {
                 cursor = db.query("books", null, "title LIKE ?",
                         new String[] { "%" + searchText + "%" }, null, null, orderBy);

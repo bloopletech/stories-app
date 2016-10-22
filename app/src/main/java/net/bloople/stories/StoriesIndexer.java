@@ -37,15 +37,15 @@ public class StoriesIndexer {
 
     public void indexFile(File file) {
         try {
-            DatabaseHelper helper = new DatabaseHelper(context);
+            Book book = Book.findByPath(context, file.getCanonicalPath());
+            if(book == null) book = new Book();
 
-            ContentValues values = new ContentValues();
-            values.put("path", file.getCanonicalPath());
-            values.put("title", file.getName().replaceAll("\\.txt$", ""));
-            values.put("mtime", file.lastModified());
-            values.put("size", file.length());
+            book.path(file.getCanonicalPath());
+            book.title(file.getName().replaceAll("\\.txt$", ""));
+            book.mtime(file.lastModified());
+            book.size(file.length());
 
-            helper.upsertBook(values);
+            book.save(context);
             indexed++;
         }
         catch(IOException e) {
