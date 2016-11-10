@@ -62,15 +62,6 @@ public class MainActivity extends Activity {
             }
         });
 
-        Button listStoriesButton = (Button)findViewById(R.id.list_stories_button);
-        listStoriesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, BooksActivity.class);
-                startActivity(intent);
-            }
-        });
-
         loadPreferences();
 
         EditText indexDirectoryText = (EditText)findViewById(R.id.index_directory);

@@ -2,6 +2,7 @@ package net.bloople.stories;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,6 +19,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 public class BooksActivity extends Activity {
     public static final int SORT_ALPHABETIC = 0;
@@ -36,6 +38,9 @@ public class BooksActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setActionBar(toolbar);
 
         listView = (RecyclerView)findViewById(R.id.stories_list);
 
@@ -107,6 +112,10 @@ public class BooksActivity extends Activity {
         }
         else if(menuItem.getItemId() == R.id.sort_last_opened) {
             sortMethod = SORT_LAST_OPENED;
+        }
+        else if(menuItem.getItemId() == R.id.manage_collection) {
+            Intent intent = new Intent(BooksActivity.this, MainActivity.class);
+            startActivity(intent);
         }
 
         updateCursor();

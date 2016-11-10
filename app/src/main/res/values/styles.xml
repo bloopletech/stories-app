@@ -1,29 +1,18 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="@android:style/Theme.Material.Light">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:actionBarStyle">@style/ActionBar</item>
-        <item name="android:actionMenuTextColor">#FFFFFF</item>
-    </style>
-
-    <style name="ActionBar" parent="@android:style/Widget.Material.Light.ActionBar">
-        <item name="android:background">@color/colorPrimaryDark</item>
-        <item name="android:titleTextStyle">@style/ActionBar.TitleTextStyle</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:textColorSecondary">#FFFFFF</item>
-    </style>
-
-    <style name="ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
-        <item name="android:textColor">#FFFFFF</item>
-    </style>
-
-    <style name="NoActionBar" parent="@style/AppTheme">
-        <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+        <!--We will be using the toolbar so no need to show ActionBar-->
+        <item name="android:windowActionBar">false</item>
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="android:colorPrimary">#3F51B5</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="android:colorPrimaryDark">#303F9F</item>
+        <!-- colorAccent is used as the default value for colorControlActivated
+         which is used to tint widgets -->
+        <item name="android:colorAccent">#FF4081</item>
     </style>
+
+
 
 </resources>
