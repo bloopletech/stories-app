@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
-public class MainActivity extends Activity {
+public class IndexingActivity extends Activity {
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_indexing);
 
         if(android.os.Build.VERSION.SDK_INT >= 23) {
             int permission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -57,8 +57,8 @@ public class MainActivity extends Activity {
         deleteIndexButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseHelper.deleteDatabase(MainActivity.this);
-                Toast.makeText(MainActivity.this, "Index deleted.", Toast.LENGTH_SHORT).show();
+                DatabaseHelper.deleteDatabase(IndexingActivity.this);
+                Toast.makeText(IndexingActivity.this, "Index deleted.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -124,14 +124,14 @@ public class MainActivity extends Activity {
 
     private class IndexingTask extends AsyncTask<Void, Void, Integer> {
         protected Integer doInBackground(Void... params) {
-            StoriesIndexer indexer = new StoriesIndexer(MainActivity.this);
+            StoriesIndexer indexer = new StoriesIndexer(IndexingActivity.this);
             indexer.indexDirectory(new File(indexRoot));
 
             return indexer.count();
         }
 
         protected void onPostExecute(Integer count) {
-            Toast.makeText(MainActivity.this, "Indexing complete, " + count + " stories indexed.",
+            Toast.makeText(IndexingActivity.this, "Indexing complete, " + count + " stories indexed.",
                     Toast.LENGTH_SHORT).show();
         }
 

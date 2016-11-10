@@ -113,8 +113,8 @@ public class BooksActivity extends Activity {
         else if(menuItem.getItemId() == R.id.sort_last_opened) {
             sortMethod = SORT_LAST_OPENED;
         }
-        else if(menuItem.getItemId() == R.id.manage_collection) {
-            Intent intent = new Intent(BooksActivity.this, MainActivity.class);
+        else if(menuItem.getItemId() == R.id.manage_indexing) {
+            Intent intent = new Intent(BooksActivity.this, IndexingActivity.class);
             startActivity(intent);
         }
 

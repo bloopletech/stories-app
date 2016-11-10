@@ -19,7 +19,7 @@
         <activity
             android:name=".ReadingStoryActivity"
             android:configChanges="orientation|screenSize"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".IndexingActivity">
 
         </activity>
     </application>
