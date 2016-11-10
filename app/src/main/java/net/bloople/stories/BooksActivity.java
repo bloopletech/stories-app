@@ -116,19 +116,20 @@ public class BooksActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if(menuItem.getItemId() == R.id.sort_direction) {
-            sortDirectionAsc = !sortDirectionAsc;
-        }
-        else if(menuItem.getItemId() == R.id.sort_alphabetic) {
+        if(menuItem.getItemId() == R.id.sort_alphabetic) {
+            if(sortMethod == SORT_ALPHABETIC) sortDirectionAsc = !sortDirectionAsc;
             sortMethod = SORT_ALPHABETIC;
         }
         else if(menuItem.getItemId() == R.id.sort_age) {
+            if(sortMethod == SORT_AGE) sortDirectionAsc = !sortDirectionAsc;
             sortMethod = SORT_AGE;
         }
         else if(menuItem.getItemId() == R.id.sort_size) {
+            if(sortMethod == SORT_SIZE) sortDirectionAsc = !sortDirectionAsc;
             sortMethod = SORT_SIZE;
         }
         else if(menuItem.getItemId() == R.id.sort_last_opened) {
+            if(sortMethod == SORT_LAST_OPENED) sortDirectionAsc = !sortDirectionAsc;
             sortMethod = SORT_LAST_OPENED;
         }
         else if(menuItem.getItemId() == R.id.manage_indexing) {
