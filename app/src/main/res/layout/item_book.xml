@@ -46,7 +46,9 @@
             android:paddingRight="8dp"
             android:layout_weight="0.5"
             android:layout_gravity="center"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:drawableStart="@drawable/ic_history_black_24dp"
+            android:drawablePadding="4dp"/>
 
 
     </LinearLayout>

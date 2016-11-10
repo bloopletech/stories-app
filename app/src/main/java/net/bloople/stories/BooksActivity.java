@@ -42,6 +42,25 @@ public class BooksActivity extends Activity {
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setActionBar(toolbar);
 
+        final EditText searchField = (EditText)findViewById(R.id.searchText);
+        searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if(actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    InputMethodManager in = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+                    searchField.clearFocus();
+
+                    searchText = v.getText().toString();
+                    updateCursor();
+
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
         listView = (RecyclerView)findViewById(R.id.stories_list);
 
         layoutManager = new LinearLayoutManager(this);
@@ -69,29 +88,6 @@ public class BooksActivity extends Activity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.list_menu, menu);
-
-        View searchView = menu.findItem(R.id.search).getActionView();
-        final EditText searchField = (EditText)searchView.findViewById(R.id.searchText);
-
-        searchField.setMaxWidth(Integer.MAX_VALUE);
-
-        searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if(actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    InputMethodManager in = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    in.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-                    searchField.clearFocus();
-
-                    searchText = v.getText().toString();
-                    updateCursor();
-
-                    handled = true;
-                }
-                return handled;
-            }
-        });
 
         return true;
     }

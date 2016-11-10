@@ -79,16 +79,16 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
 
         if(holder.ageView != null) {
             String age = DATE_FORMAT.format(new Date(book.mtime()));
-            holder.ageView.setText("Modified: " + age);
+            holder.ageView.setText("Age: " + age);
         }
 
         long lastOpenedMillis = book.lastOpenedAt();
         if(lastOpenedMillis > 0L) {
             String lastOpened = DATE_FORMAT.format(new Date(lastOpenedMillis));
-            holder.lastOpenedView.setText("Read: " + lastOpened);
+            holder.lastOpenedView.setText(lastOpened);
         }
         else {
-            holder.lastOpenedView.setText("Read: Never");
+            holder.lastOpenedView.setText("Never");
         }
     }
 
