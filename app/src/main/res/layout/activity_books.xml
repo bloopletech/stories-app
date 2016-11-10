@@ -24,7 +24,8 @@
             android:imeOptions="actionSearch"
             android:maxLines="1"
             android:textColor="#FFFFFF"
-            android:minEms="15" />
+            android:minEms="15"
+            android:drawableEnd="@drawable/ic_clear_white_24dp" />
     </Toolbar>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/stories_list"

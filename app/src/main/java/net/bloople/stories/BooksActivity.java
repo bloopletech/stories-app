@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -58,6 +59,27 @@ public class BooksActivity extends Activity {
                     handled = true;
                 }
                 return handled;
+            }
+        });
+
+        searchField.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    int clickIndex = searchField.getRight() -
+                            searchField.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+
+                    if(event.getRawX() >= clickIndex) {
+                        searchField.setText("");
+                        searchText = "";
+                        updateCursor();
+
+                        return true;
+                    }
+                }
+                return false;
             }
         });
 
