@@ -73,6 +73,7 @@ public class BooksActivity extends Activity {
 
                     if(event.getRawX() >= clickIndex) {
                         searchField.setText("");
+                        searchField.clearFocus();
                         searchText = "";
                         updateCursor();
 
