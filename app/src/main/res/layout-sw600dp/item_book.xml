@@ -46,7 +46,9 @@
             android:paddingRight="8dp"
             android:layout_weight="0.25"
             android:layout_gravity="center"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:drawableStart="@drawable/ic_history_black_24dp"
+            android:drawablePadding="4dp" />
 
         <TextView
             android:id="@+id/story_age"
@@ -58,9 +60,7 @@
             android:paddingLeft="8dp"
             android:layout_weight="0.25"
             android:layout_gravity="center"
-            android:maxLines="1"
-            android:drawableStart="@drawable/ic_history_black_24dp"
-            android:drawablePadding="4dp" />
+            android:maxLines="1" />
 
         <Space
             android:layout_width="wrap_content"
