@@ -1,6 +1,9 @@
 <resources>
 
     <style name="AppTheme" parent="@android:style/Theme.Material.Light">
+        <!-- Hide the status bar -->
+        <item name="android:windowFullscreen">true</item>
+        <!-- Skip showing the application title -->
         <item name="android:windowNoTitle">true</item>
         <!--We will be using the toolbar so no need to show ActionBar-->
         <item name="android:windowActionBar">false</item>
