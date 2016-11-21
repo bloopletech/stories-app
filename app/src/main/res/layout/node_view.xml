@@ -8,9 +8,9 @@
         android:id="@+id/text_view"
         android:textColor="#000000"
         android:textSize="16sp"
-        android:paddingLeft="10sp"
+        android:paddingLeft="15sp"
         android:paddingTop="0dp"
-        android:paddingRight="10sp"
+        android:paddingRight="15sp"
         android:paddingBottom="18sp"
-        android:lineSpacingMultiplier="1.3" />
+        android:lineSpacingMultiplier="1.15" />
 </RelativeLayout>
