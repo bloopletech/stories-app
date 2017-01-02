@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:textColor="#808080"
+            android:textColor="#8A000000"
             android:textAlignment="viewStart"
             android:paddingRight="8dp"
             android:layout_weight="0.1"
@@ -40,14 +40,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:textColor="#808080"
+            android:textColor="#8A000000"
             android:textAlignment="viewStart"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:layout_gravity="center"
             android:maxLines="1"
-            android:drawableStart="@drawable/ic_history_black_24dp"
+            android:drawableStart="@drawable/ic_visibility_black_18dp_tint"
             android:drawablePadding="4dp" />
 
         <TextView
@@ -55,17 +55,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:textColor="#808080"
+            android:textColor="#8A000000"
             android:textAlignment="viewStart"
             android:paddingLeft="8dp"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:layout_gravity="center"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:drawableStart="@drawable/ic_history_black_18dp_tint"
+            android:drawablePadding="4dp" />
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.4" />
+            android:layout_weight="0.3" />
 
     </LinearLayout>
 
