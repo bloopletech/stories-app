@@ -33,6 +33,7 @@ public class BooksActivity extends Activity {
     private String searchText = "";
 
     private RecyclerView listView;
+    private BooksAdapter adapter;
     private LinearLayoutManager layoutManager;
 
     @Override
@@ -85,6 +86,8 @@ public class BooksActivity extends Activity {
         });
 
         listView = (RecyclerView)findViewById(R.id.stories_list);
+        adapter = new BooksAdapter(null);
+        listView.setAdapter(adapter);
 
         layoutManager = new LinearLayoutManager(this);
         listView.setLayoutManager(layoutManager);
@@ -210,8 +213,7 @@ public class BooksActivity extends Activity {
         }
 
         protected void onPostExecute(Cursor cursor) {
-            BooksAdapter adapter = new BooksAdapter(cursor, BooksActivity.this);
-            listView.setAdapter(adapter);
+            adapter.swapCursor(cursor);
         }
     }
 }

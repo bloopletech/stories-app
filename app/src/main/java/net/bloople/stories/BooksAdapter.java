@@ -1,6 +1,7 @@
 package net.bloople.stories;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
@@ -24,22 +25,23 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
         public TextView sizeView;
         public TextView ageView;
         public TextView lastOpenedView;
-        public ViewHolder(View view, final Activity activity) {
+        public ViewHolder(View view) {
             super(view);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Context context = v.getContext();
                     long id = getItemId();
 
-                    Book book = Book.findById(activity, id);
+                    Book book = Book.findById(context, id);
                     book.lastOpenedAt(System.currentTimeMillis());
-                    book.save(activity);
+                    book.save(context);
 
-                    Intent intent = new Intent(activity, ReadingStoryActivity.class);
+                    Intent intent = new Intent(context, ReadingStoryActivity.class);
                     intent.putExtra("_id", id);
 
-                    activity.startActivity(intent);
+                    context.startActivity(intent);
                 }
             });
 
@@ -52,11 +54,9 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
 
     private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d MMMM yyyy",
             Locale.getDefault());
-    private Activity activity;
 
-    public BooksAdapter(Cursor cursor, Activity inActivity) {
+    public BooksAdapter(Cursor cursor) {
         super(cursor);
-        activity = inActivity;
     }
 
     // Create new views (invoked by the layout manager)
@@ -65,7 +65,7 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent,
                 false);
 
-        return new BooksAdapter.ViewHolder(view, activity);
+        return new BooksAdapter.ViewHolder(view);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
