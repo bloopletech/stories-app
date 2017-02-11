@@ -1,26 +1,40 @@
 package net.bloople.stories;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
+/**
+ * Created by i on 11/02/2017.
+ */
+
+public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
     private List<Node> nodes;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
         public ViewHolder(View view) {
             super(view);
             textView = (TextView)view.findViewById(R.id.text_view);
+
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReadingStoryActivity activity = (ReadingStoryActivity)view.getContext();
+
+                    activity.scrollToNode(nodes.get(getAdapterPosition()));
+                    activity.closeDrawers();
+                }
+            });
         }
     }
 
-    public NodesAdapter() {
+    public OutlineAdapter() {
         nodes = new ArrayList<>();
     }
 
@@ -31,8 +45,8 @@ public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> 
 
     // Create new views (invoked by the layout manager)
     @Override
-    public NodesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.node_view, parent,
+    public OutlineAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.outline_node_view, parent,
                 false);
 
         return new ViewHolder(view);
@@ -46,10 +60,10 @@ public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> 
         tv.setText(nodes.get(position).content());
 
         tv.setPadding(
-            tv.getPaddingLeft(),
-            (position == 0 ? tv.getPaddingBottom() : 0),
-            tv.getPaddingRight(),
-            tv.getPaddingBottom()
+                tv.getPaddingLeft(),
+                (position == 0 ? tv.getPaddingBottom() : 0),
+                tv.getPaddingRight(),
+                tv.getPaddingBottom()
         );
     }
 
@@ -57,9 +71,5 @@ public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return nodes.size();
-    }
-
-    public int getItemPosition(Node node) {
-        return nodes.indexOf(node);
     }
 }

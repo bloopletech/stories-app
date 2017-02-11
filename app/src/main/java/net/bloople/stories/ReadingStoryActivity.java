@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -17,6 +18,10 @@ public class ReadingStoryActivity extends Activity {
     private RecyclerView nodesView;
     private LinearLayoutManager layoutManager;
     private NodesAdapter adapter;
+    private DrawerLayout drawer;
+    private RecyclerView sidebar;
+    private LinearLayoutManager sidebarLayoutManager;
+    private OutlineAdapter outlineAdapter;
     private Book book;
 
     @Override
@@ -32,6 +37,16 @@ public class ReadingStoryActivity extends Activity {
         adapter = new NodesAdapter();
         nodesView.setAdapter(adapter);
 
+        sidebar = (RecyclerView)findViewById(R.id.sidebar);
+
+        sidebarLayoutManager = new LinearLayoutManager(this);
+        sidebar.setLayoutManager(sidebarLayoutManager);
+
+        outlineAdapter = new OutlineAdapter();
+        sidebar.setAdapter(outlineAdapter);
+
+        drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+
         Intent intent = getIntent();
         book = Book.findById(this, intent.getLongExtra("_id", -1));
 
@@ -45,6 +60,14 @@ public class ReadingStoryActivity extends Activity {
 
         book.lastReadPosition(layoutManager.findFirstVisibleItemPosition());
         book.save(this);
+    }
+
+    public void scrollToNode(Node node) {
+        layoutManager.scrollToPositionWithOffset(adapter.getItemPosition(node), 10);
+    }
+
+    public void closeDrawers() {
+        drawer.closeDrawers();
     }
 
     private class ParseStoryTask extends AsyncTask<Book, List<Node>, Void> {
@@ -78,6 +101,14 @@ public class ReadingStoryActivity extends Activity {
 
         protected void onProgressUpdate(List<Node>... nodesArgs) {
             adapter.addAll(nodesArgs[0]);
+
+            List<Node> outlineNodes = new ArrayList<>();
+
+            for(Node node : nodesArgs[0]) {
+                if(node.isOutline()) outlineNodes.add(node);
+            }
+
+            outlineAdapter.addAll(outlineNodes);
 
             if(!setPosition && (adapter.getItemCount() >= book.lastReadPosition())) {
                 setPosition = true;
