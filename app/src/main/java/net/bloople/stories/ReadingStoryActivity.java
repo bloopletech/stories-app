@@ -163,8 +163,10 @@ public class ReadingStoryActivity extends Activity {
 
             if(!setPosition && (adapter.getItemCount() >= book.lastReadPosition())) {
                 setPosition = true;
+
                 int lastReadPosition = book.lastReadPosition();
                 savedReadPosition = lastReadPosition;
+
                 nodesView.scrollToPosition(lastReadPosition);
             }
         }
