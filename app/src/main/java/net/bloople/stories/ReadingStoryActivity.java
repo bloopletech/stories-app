@@ -30,6 +30,7 @@ public class ReadingStoryActivity extends Activity {
     private Book book;
     private ScheduledThreadPoolExecutor executor;
     private ScheduledFuture<?> future;
+    private int savedReadPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +103,14 @@ public class ReadingStoryActivity extends Activity {
     }
 
     public void savePosition() {
-        book.lastReadPosition(layoutManager.findFirstVisibleItemPosition());
-        book.save(this);
+        int currentReadPosition = layoutManager.findFirstVisibleItemPosition();
+
+        if(savedReadPosition != currentReadPosition) {
+            book.lastReadPosition(currentReadPosition);
+            book.save(this);
+
+            savedReadPosition = currentReadPosition;
+        }
     }
 
     public void scrollToNode(Node node) {
@@ -156,7 +163,9 @@ public class ReadingStoryActivity extends Activity {
 
             if(!setPosition && (adapter.getItemCount() >= book.lastReadPosition())) {
                 setPosition = true;
-                nodesView.scrollToPosition(book.lastReadPosition());
+                int lastReadPosition = book.lastReadPosition();
+                savedReadPosition = lastReadPosition;
+                nodesView.scrollToPosition(lastReadPosition);
             }
         }
 
