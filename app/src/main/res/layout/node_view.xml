@@ -7,10 +7,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/text_view"
         android:textColor="#000000"
-        android:textSize="16sp"
-        android:paddingLeft="15sp"
+        android:textSize="18sp"
+        android:paddingLeft="18sp"
         android:paddingTop="0dp"
-        android:paddingRight="15sp"
-        android:paddingBottom="18sp"
-        android:lineSpacingMultiplier="1.15" />
+        android:paddingRight="18sp"
+        android:paddingBottom="25sp"
+        android:lineSpacingMultiplier="1.2" />
 </RelativeLayout>
