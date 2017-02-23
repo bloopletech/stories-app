@@ -15,10 +15,13 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class IndexingActivity extends Activity {
     // Storage Permissions
@@ -28,6 +31,7 @@ public class IndexingActivity extends Activity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    private ProgressBar progressBar;
     private Button indexButton;
     private String indexRoot;
     private boolean canAccessFiles;
@@ -47,6 +51,8 @@ public class IndexingActivity extends Activity {
         else {
             canAccessFiles = true;
         }
+
+        progressBar = (ProgressBar)findViewById(R.id.indexing_progress);
 
         indexButton = (Button)findViewById(R.id.index_button);
         indexButton.setOnClickListener(new View.OnClickListener() {
@@ -121,19 +127,70 @@ public class IndexingActivity extends Activity {
         }
     }
 
-    private class IndexingTask extends AsyncTask<Void, Void, Integer> {
-        protected Integer doInBackground(Void... params) {
-            StoriesIndexer indexer = new StoriesIndexer(IndexingActivity.this);
-            indexer.indexDirectory(new File(indexRoot));
+    private class IndexingTask extends AsyncTask<Void, Integer, Void> {
+        private int indexed;
+        private int count;
 
-            return indexer.count();
+        protected Void doInBackground(Void... params) {
+            indexDirectory(new File(indexRoot));
+            publishProgress(indexed, count);
+            return null;
         }
 
-        protected void onPostExecute(Integer count) {
+        protected void onProgressUpdate(Integer... args) {
+            progressBar.setProgress(args[0]);
+            progressBar.setMax(args[1]);
+        }
+
+        protected void onPostExecute(Void result) {
             indexButton.setEnabled(true);
             Toast.makeText(IndexingActivity.this, "Indexing complete, " + count + " stories indexed.",
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         }
 
+        void indexDirectory(File directory) {
+            File[] files = directory.listFiles();
+
+            if(files == null) return;
+
+            ArrayList<File> filesToIndex = new ArrayList<>();
+
+            for(File f : files) {
+                if(f.isDirectory()) {
+                    indexDirectory(f);
+                }
+                else {
+                    String name = f.getName();
+                    String ext = name.substring(name.lastIndexOf('.') + 1);
+
+                    if(ext.equals("txt")) filesToIndex.add(f);
+                }
+            }
+
+            count += filesToIndex.size();
+            publishProgress(indexed, count);
+
+            for(File f : filesToIndex) indexFile(f);
+        }
+
+        void indexFile(File file) {
+            try {
+                Book book = Book.findByPath(IndexingActivity.this, file.getCanonicalPath());
+                if(book == null) book = new Book();
+
+                book.path(file.getCanonicalPath());
+                book.title(file.getName().replaceAll("\\.txt$", ""));
+                book.mtime(file.lastModified());
+                book.size(file.length());
+
+                book.save(IndexingActivity.this);
+                indexed++;
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+            }
+
+            publishProgress(indexed, count);
+        }
     }
 }
