@@ -16,14 +16,7 @@ class StoryParser {
         return scanner.hasNext();
     }
 
-    Node next() throws IOException {
-        String content = scanner.next();
-
-        if(content.startsWith("#")) {
-            return NodeFactory.heading(content);
-        }
-        else {
-            return NodeFactory.paragraph(content);
-        }
+    String next() throws IOException {
+        return scanner.next();
     }
 }

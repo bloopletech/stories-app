@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
-    private List<Node> nodes;
+    private List<String> nodes;
+    private List<Integer> nodeIndexes;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
@@ -23,7 +24,7 @@ class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
                 public void onClick(View view) {
                     ReadingStoryActivity activity = (ReadingStoryActivity)view.getContext();
 
-                    activity.scrollToNode(nodes.get(getAdapterPosition()));
+                    activity.scrollToPosition(nodeIndexes.get(getAdapterPosition()));
                     activity.closeDrawers();
                 }
             });
@@ -32,10 +33,12 @@ class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
 
     OutlineAdapter() {
         nodes = new ArrayList<>();
+        nodeIndexes = new ArrayList<>();
     }
 
-    void addAll(List<Node> newNodes) {
+    void addAll(List<String> newNodes, List<Integer> newNodeIndexes) {
         nodes.addAll(newNodes);
+        nodeIndexes.addAll(newNodeIndexes);
         notifyItemRangeInserted(nodes.size() - 1, newNodes.size());
     }
 
@@ -53,7 +56,9 @@ class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView tv = holder.textView;
 
-        tv.setText(nodes.get(position).content());
+        Node node = NodeFactory.create(nodes.get(position));
+
+        tv.setText(node.content());
 
         tv.setPadding(
                 tv.getPaddingLeft(),

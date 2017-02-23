@@ -10,6 +10,19 @@ class NodeFactory {
             1.5f, 1.4f, 1.3f, 1.2f, 1.1f, 1f,
     };
 
+    static Node create(String content) {
+        if(content.startsWith("#")) {
+            return heading(content);
+        }
+        else {
+            return paragraph(content);
+        }
+    }
+
+    static boolean isOutline(String content) {
+        return content.startsWith("#");
+    }
+
     static Node heading(String content) {
         String[] elements = cleanString(content).split(" ", 2);
 

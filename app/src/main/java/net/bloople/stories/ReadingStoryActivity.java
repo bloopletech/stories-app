@@ -113,15 +113,15 @@ public class ReadingStoryActivity extends Activity {
         }
     }
 
-    public void scrollToNode(Node node) {
-        layoutManager.scrollToPositionWithOffset(adapter.getItemPosition(node), 10);
+    public void scrollToPosition(int position) {
+        layoutManager.scrollToPositionWithOffset(position, 10);
     }
 
     public void closeDrawers() {
         drawer.closeDrawers();
     }
 
-    private class ParseStoryTask extends AsyncTask<Book, List<Node>, Void> {
+    private class ParseStoryTask extends AsyncTask<Book, List<String>, Void> {
         int BATCH_SIZE = 50;
         private boolean setPosition = false;
 
@@ -131,7 +131,7 @@ public class ReadingStoryActivity extends Activity {
             try {
                 StoryParser parser = new StoryParser(new BufferedReader(new FileReader(book.path())));
 
-                List<Node> accumulator = new ArrayList<>();
+                List<String> accumulator = new ArrayList<>();
                 while(parser.hasNext()) {
                     accumulator.add(parser.next());
 
@@ -150,16 +150,20 @@ public class ReadingStoryActivity extends Activity {
             return null;
         }
 
-        protected void onProgressUpdate(List<Node>... nodesArgs) {
+        protected void onProgressUpdate(List<String>... nodesArgs) {
             adapter.addAll(nodesArgs[0]);
 
-            List<Node> outlineNodes = new ArrayList<>();
+            List<String> outlineNodes = new ArrayList<>();
+            List<Integer> outlineNodesMap = new ArrayList<>();
 
-            for(Node node : nodesArgs[0]) {
-                if(node.isOutline()) outlineNodes.add(node);
+            for(String node : nodesArgs[0]) {
+                if(NodeFactory.isOutline(node)) {
+                    outlineNodes.add(node);
+                    outlineNodesMap.add(adapter.getItemPosition(node));
+                }
             }
 
-            outlineAdapter.addAll(outlineNodes);
+            outlineAdapter.addAll(outlineNodes, outlineNodesMap);
 
             if(!setPosition && (adapter.getItemCount() >= book.lastReadPosition())) {
                 setPosition = true;

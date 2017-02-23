@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
-    private List<Node> nodes;
+    private List<String> nodes;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
@@ -24,7 +24,7 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
         nodes = new ArrayList<>();
     }
 
-    void addAll(List<Node> newNodes) {
+    void addAll(List<String> newNodes) {
         nodes.addAll(newNodes);
         notifyItemRangeInserted(nodes.size() - 1, newNodes.size());
     }
@@ -43,7 +43,9 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView tv = holder.textView;
 
-        tv.setText(nodes.get(position).content());
+        Node node = NodeFactory.create(nodes.get(position));
+
+        tv.setText(node.content());
 
         tv.setPadding(
             tv.getPaddingLeft(),
@@ -59,7 +61,7 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
         return nodes.size();
     }
 
-    int getItemPosition(Node node) {
-        return nodes.indexOf(node);
+    int getItemPosition(String node) {
+        return nodes.lastIndexOf(node);
     }
 }
