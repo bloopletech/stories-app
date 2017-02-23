@@ -3,11 +3,11 @@ package net.bloople.stories;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-public class DatabaseHelper {
-    public static final String DB_NAME = "books";
+class DatabaseHelper {
+    private static final String DB_NAME = "books";
     private static SQLiteDatabase database;
 
-    public static SQLiteDatabase obtainDatabase(Context context) {
+    private static SQLiteDatabase obtainDatabase(Context context) {
         SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DB_NAME,
                 Context.MODE_PRIVATE, null);
 
@@ -24,7 +24,7 @@ public class DatabaseHelper {
         return db;
     }
 
-    public static SQLiteDatabase instance(Context context) {
+    static SQLiteDatabase instance(Context context) {
         if(database == null) {
             database = obtainDatabase(context);
         }
@@ -32,7 +32,7 @@ public class DatabaseHelper {
         return database;
     }
 
-    public static void deleteDatabase(Context context) {
+    static void deleteDatabase(Context context) {
         context.getApplicationContext().deleteDatabase(DB_NAME);
         database = null;
     }

@@ -1,7 +1,7 @@
 package net.bloople.stories;
 
-public class Paragraph extends Node {
-    public Paragraph(CharSequence content) {
+class Paragraph extends Node {
+    Paragraph(CharSequence content) {
         super(content);
     }
 

@@ -1,9 +1,9 @@
 package net.bloople.stories;
 
-public abstract class Node {
+abstract class Node {
     private CharSequence content;
 
-    public Node(CharSequence content) {
+    Node(CharSequence content) {
         this.content = content;
     }
 

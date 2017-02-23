@@ -9,22 +9,22 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
+class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
     private List<Node> nodes;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView;
-        public ViewHolder(View view) {
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView textView;
+        ViewHolder(View view) {
             super(view);
             textView = (TextView)view.findViewById(R.id.text_view);
         }
     }
 
-    public NodesAdapter() {
+    NodesAdapter() {
         nodes = new ArrayList<>();
     }
 
-    public void addAll(List<Node> newNodes) {
+    void addAll(List<Node> newNodes) {
         nodes.addAll(newNodes);
         notifyItemRangeInserted(nodes.size() - 1, newNodes.size());
     }
@@ -59,7 +59,7 @@ public class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> 
         return nodes.size();
     }
 
-    public int getItemPosition(Node node) {
+    int getItemPosition(Node node) {
         return nodes.indexOf(node);
     }
 }

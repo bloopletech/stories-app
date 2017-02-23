@@ -9,12 +9,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
+class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
     private List<Node> nodes;
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView;
-        public ViewHolder(View view) {
+        TextView textView;
+        ViewHolder(View view) {
             super(view);
             textView = (TextView)view.findViewById(R.id.text_view);
 
@@ -30,11 +30,11 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHold
         }
     }
 
-    public OutlineAdapter() {
+    OutlineAdapter() {
         nodes = new ArrayList<>();
     }
 
-    public void addAll(List<Node> newNodes) {
+    void addAll(List<Node> newNodes) {
         nodes.addAll(newNodes);
         notifyItemRangeInserted(nodes.size() - 1, newNodes.size());
     }

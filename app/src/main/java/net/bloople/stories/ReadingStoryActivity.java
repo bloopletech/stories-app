@@ -122,7 +122,7 @@ public class ReadingStoryActivity extends Activity {
     }
 
     private class ParseStoryTask extends AsyncTask<Book, List<Node>, Void> {
-        public int BATCH_SIZE = 50;
+        int BATCH_SIZE = 50;
         private boolean setPosition = false;
 
         protected Void doInBackground(Book... bookArgs) {

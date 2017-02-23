@@ -5,15 +5,15 @@ import android.content.Context;
 import java.io.File;
 import java.io.IOException;
 
-public class StoriesIndexer {
+class StoriesIndexer {
     private Context context;
     private int indexed;
 
-    public StoriesIndexer(Context context) {
+    StoriesIndexer(Context context) {
         this.context = context;
     }
 
-    public void indexDirectory(File directory) {
+    void indexDirectory(File directory) {
         File[] files = directory.listFiles();
 
         if(files == null) return;
@@ -31,7 +31,7 @@ public class StoriesIndexer {
         }
     }
 
-    public void indexFile(File file) {
+    void indexFile(File file) {
         try {
             Book book = Book.findByPath(context, file.getCanonicalPath());
             if(book == null) book = new Book();
@@ -49,7 +49,7 @@ public class StoriesIndexer {
         }
     }
 
-    public int count() {
+    int count() {
         return indexed;
     }
 }

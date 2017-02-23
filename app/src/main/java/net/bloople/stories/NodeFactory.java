@@ -5,12 +5,12 @@ import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 
-public class NodeFactory {
+class NodeFactory {
     private static final float[] HEADER_SIZES = {
             1.5f, 1.4f, 1.3f, 1.2f, 1.1f, 1f,
     };
 
-    public static Node heading(String content) {
+    static Node heading(String content) {
         String[] elements = cleanString(content).split(" ", 2);
 
         if(elements.length < 2) return new Paragraph(cleanString(content));
@@ -27,11 +27,11 @@ public class NodeFactory {
         return new Heading(result, level);
     }
 
-    public static Node paragraph(String content) {
+    static Node paragraph(String content) {
         return new Paragraph(cleanString(content));
     }
 
-    public static String cleanString(String input) {
+    static String cleanString(String input) {
         return input.replaceAll("\\s+", " ").trim();
     }
 }

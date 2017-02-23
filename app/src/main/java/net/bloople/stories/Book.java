@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class Book {
+class Book {
     private long _id = -1L;
     private String path;
     private String title;
@@ -14,7 +14,7 @@ public class Book {
     private long lastOpenedAt;
     private int lastReadPosition;
 
-    public static Book findById(Context context, long id) {
+    static Book findById(Context context, long id) {
         SQLiteDatabase db = DatabaseHelper.instance(context);
 
         Cursor result = db.rawQuery("SELECT * FROM books WHERE _id=?", new String[] { String.valueOf(id) });
@@ -30,7 +30,7 @@ public class Book {
         }
     }
 
-    public static Book findByPath(Context context, String path) {
+    static Book findByPath(Context context, String path) {
         SQLiteDatabase db = DatabaseHelper.instance(context);
 
         Cursor result = db.rawQuery("SELECT * FROM books WHERE path=?", new String[] { path });
@@ -46,10 +46,10 @@ public class Book {
         }
     }
 
-    public Book() {
+    Book() {
     }
 
-    public Book(Cursor result) {
+    Book(Cursor result) {
         _id = result.getLong(result.getColumnIndex("_id"));
         path = result.getString(result.getColumnIndex("path"));
         title = result.getString(result.getColumnIndex("title"));

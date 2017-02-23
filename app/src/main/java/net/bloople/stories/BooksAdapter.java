@@ -14,13 +14,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder> {
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView titleView;
-        public TextView sizeView;
-        public TextView ageView;
-        public TextView lastOpenedView;
-        public ViewHolder(View view) {
+class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder> {
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView titleView;
+        TextView sizeView;
+        TextView ageView;
+        TextView lastOpenedView;
+        ViewHolder(View view) {
             super(view);
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +50,7 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
     private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("d MMMM yyyy",
             Locale.getDefault());
 
-    public BooksAdapter(Cursor cursor) {
+    BooksAdapter(Cursor cursor) {
         super(cursor);
     }
 
@@ -88,7 +88,7 @@ public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder>
     }
 
     //Copied from https://github.com/nbsp-team/MaterialFilePicker
-    public static String getReadableFileSize(long size) {
+    static String getReadableFileSize(long size) {
         if (size <= 0) return "0";
         final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
