@@ -1,7 +1,6 @@
 package net.bloople.stories;
 
 import android.support.test.runner.AndroidJUnit4;
-import android.text.SpannableString;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,9 +14,6 @@ import java.util.NoSuchElementException;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- * Created by i on 3/06/2016.
- */
 @RunWith(AndroidJUnit4.class)
 public class StoryParserTest {
     @Rule
@@ -28,8 +24,8 @@ public class StoryParserTest {
         Reader reader = new StringReader("first paragraph\n\nsecond paragraph");
         StoryParser parser = new StoryParser(reader);
 
-        assertEquals(parser.next().content(), "first paragraph");
-        assertEquals(parser.next().content(), "second paragraph");
+        assertEquals(parser.next(), "first paragraph");
+        assertEquals(parser.next(), "second paragraph");
 
         thrown.expect(NoSuchElementException.class);
         parser.next();
@@ -40,8 +36,7 @@ public class StoryParserTest {
         Reader reader = new StringReader("# Test Heading");
         StoryParser parser = new StoryParser(reader);
 
-        Node node = parser.next();
-        assertEquals(node.content().getClass(), SpannableString.class);
-        assertEquals(node.content().toString(), "Test Heading");
+        String node = parser.next();
+        assertEquals(node, "# Test Heading");
     }
 }

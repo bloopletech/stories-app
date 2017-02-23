@@ -43,9 +43,7 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView tv = holder.textView;
 
-        Node node = NodeFactory.create(nodes.get(position));
-
-        tv.setText(node.content());
+        tv.setText(NodeFactory.create(nodes.get(position)));
 
         tv.setPadding(
             tv.getPaddingLeft(),

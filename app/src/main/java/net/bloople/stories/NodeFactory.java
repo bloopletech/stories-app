@@ -10,7 +10,7 @@ class NodeFactory {
             1.5f, 1.4f, 1.3f, 1.2f, 1.1f, 1f,
     };
 
-    static Node create(String content) {
+    static CharSequence create(String content) {
         if(content.startsWith("#")) {
             return heading(content);
         }
@@ -23,10 +23,10 @@ class NodeFactory {
         return content.startsWith("#");
     }
 
-    static Node heading(String content) {
+    static CharSequence heading(String content) {
         String[] elements = cleanString(content).split(" ", 2);
 
-        if(elements.length < 2) return new Paragraph(cleanString(content));
+        if(elements.length < 2) return paragraph(content);
 
         //TODO check more carefully
         int level = elements[0].length();
@@ -37,11 +37,11 @@ class NodeFactory {
 
         result.setSpan(new StyleSpan(Typeface.BOLD), 0, result.length(), 0);
 
-        return new Heading(result, level);
+        return result;
     }
 
-    static Node paragraph(String content) {
-        return new Paragraph(cleanString(content));
+    static CharSequence paragraph(String content) {
+        return cleanString(content);
     }
 
     static String cleanString(String input) {
