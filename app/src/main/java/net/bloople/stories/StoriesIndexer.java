@@ -9,8 +9,8 @@ public class StoriesIndexer {
     private Context context;
     private int indexed;
 
-    public StoriesIndexer(Context inContext) {
-        context = inContext;
+    public StoriesIndexer(Context context) {
+        this.context = context;
     }
 
     public void indexDirectory(File directory) {

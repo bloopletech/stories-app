@@ -63,48 +63,48 @@ public class Book {
         return path;
     }
 
-    public void path(String inPath) {
-        path = inPath;
+    public void path(String path) {
+        this.path = path;
     }
 
     public String title() {
         return title;
     }
 
-    public void title(String inTitle) {
-        title = inTitle;
+    public void title(String title) {
+        this.title = title;
     }
 
     public long mtime() {
         return mtime;
     }
 
-    public void mtime(long inMtime) {
-        mtime = inMtime;
+    public void mtime(long mtime) {
+        this.mtime = mtime;
     }
 
     public long size() {
         return size;
     }
 
-    public void size(long inSize) {
-        size = inSize;
+    public void size(long size) {
+        this.size = size;
     }
 
     public long lastOpenedAt() {
         return lastOpenedAt;
     }
 
-    public void lastOpenedAt(long inLastOpenedAt) {
-        lastOpenedAt = inLastOpenedAt;
+    public void lastOpenedAt(long lastOpenedAt) {
+        this.lastOpenedAt = lastOpenedAt;
     }
 
     public int lastReadPosition() {
         return lastReadPosition;
     }
 
-    public void lastReadPosition(int inLastReadPosition) {
-        lastReadPosition = inLastReadPosition;
+    public void lastReadPosition(int lastReadPosition) {
+        this.lastReadPosition = lastReadPosition;
     }
 
     public void save(Context context) {

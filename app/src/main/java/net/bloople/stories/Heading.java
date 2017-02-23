@@ -3,9 +3,9 @@ package net.bloople.stories;
 public class Heading extends Node {
     private int level;
 
-    public Heading(CharSequence content, int inLevel) {
+    public Heading(CharSequence content, int level) {
         super(content);
-        level = inLevel;
+        this.level = level;
     }
 
     public int level() {
