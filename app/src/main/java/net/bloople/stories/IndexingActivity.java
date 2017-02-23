@@ -9,11 +9,12 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -26,6 +27,7 @@ public class IndexingActivity extends Activity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    private Button indexButton;
     private String indexRoot;
     private boolean canAccessFiles;
 
@@ -45,10 +47,11 @@ public class IndexingActivity extends Activity {
             canAccessFiles = true;
         }
 
-        final Button indexButton = (Button)findViewById(R.id.index_button);
+        indexButton = (Button)findViewById(R.id.index_button);
         indexButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                indexButton.setEnabled(false);
                 startIndexing();
             }
         });
@@ -64,25 +67,19 @@ public class IndexingActivity extends Activity {
 
         loadPreferences();
 
-        EditText indexDirectoryText = (EditText)findViewById(R.id.index_directory);
+        final EditText indexDirectoryText = (EditText)findViewById(R.id.index_directory);
         indexDirectoryText.setText(indexRoot);
-        indexDirectoryText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                indexRoot = s.toString();
-                savePreferences();
+        indexDirectoryText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) ||
+                        (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    indexRoot = indexDirectoryText.getText().toString();
+                    savePreferences();
+                }
+                return false;
             }
         });
-
-
     }
 
     @Override
@@ -131,6 +128,7 @@ public class IndexingActivity extends Activity {
         }
 
         protected void onPostExecute(Integer count) {
+            indexButton.setEnabled(true);
             Toast.makeText(IndexingActivity.this, "Indexing complete, " + count + " stories indexed.",
                     Toast.LENGTH_SHORT).show();
         }
