@@ -1,14 +1,10 @@
 package net.bloople.stories;
 
-import android.content.ContentValues;
 import android.content.Context;
 
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created by i on 7/10/2016.
- */
 public class StoriesIndexer {
     private Context context;
     private int indexed;

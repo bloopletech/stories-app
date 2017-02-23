@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Scanner;
 
-/**
- * Created by i on 27/05/2016.
- */
 public class StoryParser {
     private Scanner scanner;
 

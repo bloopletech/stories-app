@@ -1,6 +1,5 @@
 package net.bloople.stories;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,10 +13,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-/**
- * Created by i on 19/10/2016.
- */
 
 public class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -9,10 +9,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by i on 11/02/2017.
- */
-
 public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
     private List<Node> nodes;
 

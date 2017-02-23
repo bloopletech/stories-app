@@ -5,10 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-/**
- * Created by i on 22/10/2016.
- */
-
 public class Book {
     private long _id = -1L;
     private String path;

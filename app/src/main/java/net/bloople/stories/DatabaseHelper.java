@@ -1,13 +1,7 @@
 package net.bloople.stories;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
-/**
- * Created by i on 19/10/2016.
- */
 
 public class DatabaseHelper {
     public static final String DB_NAME = "books";
