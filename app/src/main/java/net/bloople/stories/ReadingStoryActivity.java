@@ -13,13 +13,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 public class ReadingStoryActivity extends Activity {
-    public static final int SAVE_POSITION_PERIOD_SECONDS = 5;
-
     private RecyclerView nodesView;
     private LinearLayoutManager layoutManager;
     private NodesAdapter adapter;
@@ -28,8 +25,6 @@ public class ReadingStoryActivity extends Activity {
     private LinearLayoutManager sidebarLayoutManager;
     private OutlineAdapter outlineAdapter;
     private Book book;
-    private ScheduledThreadPoolExecutor executor;
-    private ScheduledFuture<?> future;
     private int savedReadPosition;
 
     @Override
@@ -38,12 +33,22 @@ public class ReadingStoryActivity extends Activity {
         setContentView(R.layout.activity_reading_story);
 
         nodesView = (RecyclerView)findViewById(R.id.nodes_view);
+        nodesView.setItemAnimator(null);
 
         layoutManager = new LinearLayoutManager(this);
         nodesView.setLayoutManager(layoutManager);
 
         adapter = new NodesAdapter();
         nodesView.setAdapter(adapter);
+
+        nodesView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if(newState == SCROLL_STATE_IDLE) savePosition();
+            }
+        });
 
         sidebar = (RecyclerView)findViewById(R.id.sidebar);
 
@@ -58,8 +63,6 @@ public class ReadingStoryActivity extends Activity {
         Intent intent = getIntent();
         book = Book.findById(this, intent.getLongExtra("_id", -1));
 
-        executor = new ScheduledThreadPoolExecutor(1);
-
         ParseStoryTask parser = new ParseStoryTask();
         parser.execute(book);
     }
@@ -67,39 +70,7 @@ public class ReadingStoryActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(future != null) future.cancel(false);
         savePosition();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if(future != null) future.cancel(false);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if(future != null) future.cancel(false);
-        future = executor.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        savePosition();
-                    }
-                });
-            }
-        }, SAVE_POSITION_PERIOD_SECONDS, SAVE_POSITION_PERIOD_SECONDS, TimeUnit.SECONDS);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(future != null) future.cancel(false);
-        executor.shutdownNow();
     }
 
     public void savePosition() {
