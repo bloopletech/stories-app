@@ -60,8 +60,4 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
     public int getItemCount() {
         return nodes.size();
     }
-
-    int getItemPosition(String node) {
-        return nodes.lastIndexOf(node);
-    }
 }

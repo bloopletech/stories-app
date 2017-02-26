@@ -122,15 +122,18 @@ public class ReadingStoryActivity extends Activity {
         }
 
         protected void onProgressUpdate(List<String>... nodesArgs) {
+            int countBefore = adapter.getItemCount();
             adapter.addAll(nodesArgs[0]);
 
             List<String> outlineNodes = new ArrayList<>();
             List<Integer> outlineNodesMap = new ArrayList<>();
 
-            for(String node : nodesArgs[0]) {
+            for(int i = 0; i < nodesArgs[0].size(); i++) {
+                String node = nodesArgs[0].get(i);
+
                 if(NodeRenderer.isOutline(node)) {
                     outlineNodes.add(node);
-                    outlineNodesMap.add(adapter.getItemPosition(node));
+                    outlineNodesMap.add(countBefore + i);
                 }
             }
 
