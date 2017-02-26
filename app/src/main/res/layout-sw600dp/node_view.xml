@@ -9,5 +9,5 @@
     android:paddingLeft="22sp"
     android:paddingTop="0dp"
     android:paddingRight="22sp"
-    android:paddingBottom="25sp"
+    android:paddingBottom="22sp"
     android:lineSpacingMultiplier="1.3" />
