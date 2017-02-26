@@ -145,7 +145,7 @@ public class ReadingStoryActivity extends Activity {
                 int lastReadPosition = book.lastReadPosition();
                 savedReadPosition = lastReadPosition;
 
-                nodesView.scrollToPosition(lastReadPosition);
+                scrollToPosition(lastReadPosition);
             }
         }
 
