@@ -12,6 +12,7 @@ import java.util.List;
 class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
     private List<String> nodes;
     private List<Integer> nodeIndexes;
+    private NodeRenderer renderer;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
@@ -34,6 +35,7 @@ class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
     OutlineAdapter() {
         nodes = new ArrayList<>();
         nodeIndexes = new ArrayList<>();
+        renderer = new NodeRenderer();
     }
 
     void addAll(List<String> newNodes, List<Integer> newNodeIndexes) {
@@ -56,7 +58,7 @@ class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView tv = holder.textView;
 
-        tv.setText(NodeFactory.create(nodes.get(position)));
+        tv.setText(renderer.render(nodes.get(position)));
 
         tv.setPadding(
                 tv.getPaddingLeft(),

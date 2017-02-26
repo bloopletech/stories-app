@@ -11,6 +11,7 @@ import java.util.List;
 
 class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
     private List<String> nodes;
+    private NodeRenderer renderer;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
@@ -22,6 +23,7 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
 
     NodesAdapter() {
         nodes = new ArrayList<>();
+        renderer = new NodeRenderer();
     }
 
     void addAll(List<String> newNodes) {
@@ -43,7 +45,7 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView tv = holder.textView;
 
-        tv.setText(NodeFactory.create(nodes.get(position)));
+        tv.setText(renderer.render(nodes.get(position)));
 
         tv.setPadding(
             tv.getPaddingLeft(),

@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/text_view"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:paddingLeft="16sp"
-        android:paddingTop="0dp"
-        android:paddingRight="16sp"
-        android:paddingBottom="22sp"
-        android:lineSpacingMultiplier="1.2" />
-</RelativeLayout>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/text_view"
+    android:textColor="#000000"
+    android:textSize="16sp"
+    android:paddingLeft="16sp"
+    android:paddingTop="0dp"
+    android:paddingRight="16sp"
+    android:paddingBottom="22sp"
+    android:lineSpacingMultiplier="1.2" />

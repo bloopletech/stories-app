@@ -157,7 +157,7 @@ public class ReadingStoryActivity extends Activity {
             List<Integer> outlineNodesMap = new ArrayList<>();
 
             for(String node : nodesArgs[0]) {
-                if(NodeFactory.isOutline(node)) {
+                if(NodeRenderer.isOutline(node)) {
                     outlineNodes.add(node);
                     outlineNodesMap.add(adapter.getItemPosition(node));
                 }

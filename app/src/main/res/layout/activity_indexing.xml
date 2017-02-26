@@ -44,7 +44,5 @@
             android:id="@+id/delete_index_button"
             android:layout_gravity="center"
             android:layout_weight="1" />
-
     </LinearLayout>
-
 </LinearLayout>
