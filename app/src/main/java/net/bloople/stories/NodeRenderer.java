@@ -5,17 +5,10 @@ import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 
-import java.util.regex.Pattern;
-
 class NodeRenderer {
     private static final float[] HEADER_SIZES = {
             1.5f, 1.4f, 1.3f, 1.2f, 1.1f, 1f,
     };
-    private Pattern cleanPattern;
-
-    NodeRenderer() {
-        cleanPattern = Pattern.compile("\\s+");
-    }
 
     CharSequence render(String content) {
         if(content.startsWith("#")) {
@@ -31,7 +24,7 @@ class NodeRenderer {
     }
 
     private CharSequence heading(String content) {
-        String[] elements = cleanString(content).split(" ", 2);
+        String[] elements = content.split(" ", 2);
 
         if(elements.length < 2) return paragraph(content);
 
@@ -48,10 +41,7 @@ class NodeRenderer {
     }
 
     private CharSequence paragraph(String content) {
-        return cleanString(content);
+        return content;
     }
 
-    private String cleanString(String input) {
-        return cleanPattern.matcher(input).replaceAll(" ").trim();
-    }
 }
