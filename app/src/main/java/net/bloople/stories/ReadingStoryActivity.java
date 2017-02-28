@@ -85,7 +85,7 @@ public class ReadingStoryActivity extends Activity {
     }
 
     public void scrollToPosition(int position) {
-        layoutManager.scrollToPositionWithOffset(position, 10);
+        layoutManager.scrollToPositionWithOffset(position, 0);
     }
 
     public void closeDrawers() {
