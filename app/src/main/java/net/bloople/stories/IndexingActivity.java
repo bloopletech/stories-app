@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class IndexingActivity extends Activity {
+public class IndexingActivity extends Activity implements Indexable {
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -59,7 +59,12 @@ public class IndexingActivity extends Activity {
             @Override
             public void onClick(View v) {
                 indexButton.setEnabled(false);
-                startIndexing();
+
+                if(canAccessFiles) {
+                    IndexingTask indexer = new IndexingTask(IndexingActivity.this,
+                            IndexingActivity.this);
+                    indexer.execute(indexRoot);
+                }
             }
         });
 
@@ -120,77 +125,14 @@ public class IndexingActivity extends Activity {
         editor.apply();
     }
 
-    public void startIndexing() {
-        if(canAccessFiles) {
-            IndexingTask indexer = new IndexingTask();
-            indexer.execute();
-        }
+    public void onIndexingProgress(int progress, int max) {
+        progressBar.setProgress(progress);
+        progressBar.setMax(max);
     }
 
-    private class IndexingTask extends AsyncTask<Void, Integer, Void> {
-        private int indexed;
-        private int count;
-
-        protected Void doInBackground(Void... params) {
-            indexDirectory(new File(indexRoot));
-            publishProgress(indexed, count);
-            return null;
-        }
-
-        protected void onProgressUpdate(Integer... args) {
-            progressBar.setProgress(args[0]);
-            progressBar.setMax(args[1]);
-        }
-
-        protected void onPostExecute(Void result) {
-            indexButton.setEnabled(true);
-            Toast.makeText(IndexingActivity.this, "Indexing complete, " + count + " stories indexed.",
-                    Toast.LENGTH_LONG).show();
-        }
-
-        void indexDirectory(File directory) {
-            File[] files = directory.listFiles();
-
-            if(files == null) return;
-
-            ArrayList<File> filesToIndex = new ArrayList<>();
-
-            for(File f : files) {
-                if(f.isDirectory()) {
-                    indexDirectory(f);
-                }
-                else {
-                    String name = f.getName();
-                    String ext = name.substring(name.lastIndexOf('.') + 1);
-
-                    if(ext.equals("txt")) filesToIndex.add(f);
-                }
-            }
-
-            count += filesToIndex.size();
-            publishProgress(indexed, count);
-
-            for(File f : filesToIndex) indexFile(f);
-        }
-
-        void indexFile(File file) {
-            try {
-                Book book = Book.findByPath(IndexingActivity.this, file.getCanonicalPath());
-                if(book == null) book = new Book();
-
-                book.path(file.getCanonicalPath());
-                book.title(file.getName().replaceAll("\\.txt$", ""));
-                book.mtime(file.lastModified());
-                book.size(file.length());
-
-                book.save(IndexingActivity.this);
-                indexed++;
-            }
-            catch(IOException e) {
-                e.printStackTrace();
-            }
-
-            publishProgress(indexed, count);
-        }
+    public void onIndexingComplete(int count) {
+        indexButton.setEnabled(true);
+        Toast.makeText(IndexingActivity.this, "Indexing complete, " + count + " stories indexed.",
+                Toast.LENGTH_LONG).show();
     }
 }

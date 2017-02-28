@@ -125,4 +125,10 @@ class Book {
             db.update("books", values, "_id=?", new String[] { String.valueOf(_id) });
         }
     }
+
+    public void destroy(Context context) {
+        SQLiteDatabase db = DatabaseHelper.instance(context);
+
+        db.delete("books", "_id=?", new String[] { String.valueOf(_id) });
+    }
 }
