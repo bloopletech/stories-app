@@ -63,6 +63,9 @@ public class ReadingStoryActivity extends Activity {
         Intent intent = getIntent();
         book = Book.findById(this, intent.getLongExtra("_id", -1));
 
+        book.lastOpenedAt(System.currentTimeMillis());
+        book.save(this);
+
         ParseStoryTask parser = new ParseStoryTask();
         parser.execute(book);
     }
@@ -70,6 +73,10 @@ public class ReadingStoryActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
+
+        book.lastOpenedAt(System.currentTimeMillis());
+        book.save(this);
+
         savePosition();
     }
 

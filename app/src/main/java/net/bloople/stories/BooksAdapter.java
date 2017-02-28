@@ -29,10 +29,6 @@ class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder> {
                     Context context = v.getContext();
                     long id = getItemId();
 
-                    Book book = Book.findById(context, id);
-                    book.lastOpenedAt(System.currentTimeMillis());
-                    book.save(context);
-
                     Intent intent = new Intent(context, ReadingStoryActivity.class);
                     intent.putExtra("_id", id);
 
