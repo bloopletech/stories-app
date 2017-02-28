@@ -73,6 +73,12 @@ public class ReadingStoryActivity extends Activity {
         savePosition();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
     public void savePosition() {
         int currentReadPosition = layoutManager.findFirstVisibleItemPosition();
 
