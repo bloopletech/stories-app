@@ -1,6 +1,7 @@
 package net.bloople.stories;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 class DatabaseHelper {
@@ -20,6 +21,22 @@ class DatabaseHelper {
                 "last_opened_at INTEGER DEFAULT 0, " +
                 "last_read_position INTEGER DEFAULT 0" +
                 ")");
+
+        boolean alreadyHasStarred = false;
+        Cursor columns = db.rawQuery("PRAGMA table_info(books)", null);
+
+        while(columns.moveToNext()) {
+            if(columns.getString(columns.getColumnIndex("name")).equals("starred")) {
+                alreadyHasStarred = true;
+                break;
+            }
+        }
+
+        columns.close();
+
+        if(!alreadyHasStarred) {
+            db.execSQL("ALTER TABLE books ADD COLUMN starred INT DEFAULT 0");
+        }
 
         return db;
     }

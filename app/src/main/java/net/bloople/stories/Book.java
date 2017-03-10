@@ -13,6 +13,7 @@ class Book {
     private long size;
     private long lastOpenedAt;
     private int lastReadPosition;
+    private boolean starred;
 
     static Book findById(Context context, long id) {
         SQLiteDatabase db = DatabaseHelper.instance(context);
@@ -57,6 +58,7 @@ class Book {
         size = result.getLong(result.getColumnIndex("size"));
         lastOpenedAt = result.getLong(result.getColumnIndex("last_opened_at"));
         lastReadPosition = result.getInt(result.getColumnIndex("last_read_position"));
+        starred = result.getInt(result.getColumnIndex("starred")) == 1;
     }
 
     public String path() {
@@ -107,6 +109,14 @@ class Book {
         this.lastReadPosition = lastReadPosition;
     }
 
+    public boolean starred() {
+        return starred;
+    }
+
+    public void starred(boolean starred) {
+        this.starred = starred;
+    }
+
     public void save(Context context) {
         ContentValues values = new ContentValues();
         values.put("path", path);
@@ -115,6 +125,7 @@ class Book {
         values.put("size", size);
         values.put("last_opened_at", lastOpenedAt);
         values.put("last_read_position", lastReadPosition);
+        values.put("starred", starred ? 1 : 0);
 
         SQLiteDatabase db = DatabaseHelper.instance(context);
 

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
@@ -20,6 +21,7 @@ class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder> {
         TextView sizeView;
         TextView ageView;
         TextView lastOpenedView;
+        ImageButton starView;
         ViewHolder(View view) {
             super(view);
 
@@ -40,6 +42,23 @@ class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder> {
             sizeView = (TextView)view.findViewById(R.id.story_size);
             ageView = (TextView)view.findViewById(R.id.story_age);
             lastOpenedView = (TextView)view.findViewById(R.id.story_last_opened);
+            starView = (ImageButton)view.findViewById(R.id.story_star);
+
+            starView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Context context = view.getContext();
+                    long id = getItemId();
+
+                    Book book = Book.findById(context, id);
+                    boolean starred = !book.starred();
+
+                    book.starred(starred);
+                    book.save(context);
+
+                    view.setActivated(starred);
+                }
+            });
         }
     }
 
@@ -81,6 +100,8 @@ class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder> {
         else {
             holder.lastOpenedView.setText("Never");
         }
+
+        holder.starView.setActivated(book.starred());
     }
 
     //Copied from https://github.com/nbsp-team/MaterialFilePicker

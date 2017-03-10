@@ -18,6 +18,11 @@
         android:title="Last Opened"
         android:icon="@drawable/ic_visibility_white_24dp"
         android:showAsAction="always"/>
+    <item
+        android:id="@+id/sort_starred"
+        android:title="Starred"
+        android:icon="@drawable/ic_star_white_24dp"
+        android:showAsAction="always"/>
 
     <item
         android:id="@+id/manage_indexing"

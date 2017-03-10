@@ -27,6 +27,7 @@ public class BooksActivity extends Activity {
     public static final int SORT_AGE = 1;
     public static final int SORT_SIZE = 2;
     public static final int SORT_LAST_OPENED = 3;
+    public static final int SORT_STARRED = 4;
 
     private int sortMethod;
     private boolean sortDirectionAsc;
@@ -136,6 +137,10 @@ public class BooksActivity extends Activity {
             if(sortMethod == SORT_LAST_OPENED) sortDirectionAsc = !sortDirectionAsc;
             sortMethod = SORT_LAST_OPENED;
         }
+        else if(menuItem.getItemId() == R.id.sort_starred) {
+            if(sortMethod == SORT_STARRED) sortDirectionAsc = !sortDirectionAsc;
+            sortMethod = SORT_STARRED;
+        }
         else if(menuItem.getItemId() == R.id.manage_indexing) {
             Intent intent = new Intent(BooksActivity.this, IndexingActivity.class);
             startActivity(intent);
@@ -179,6 +184,9 @@ public class BooksActivity extends Activity {
                 break;
             case SORT_LAST_OPENED:
                 orderBy += "last_opened_at";
+                break;
+            case SORT_STARRED:
+                orderBy += "starred";
                 break;
         }
 
