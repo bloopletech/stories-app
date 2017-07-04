@@ -78,9 +78,8 @@
 
     <ImageButton
         android:id="@+id/story_star"
-        android:layout_width="24dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
         android:background="#fff"
-        android:src="@drawable/book_starred_selector"/>
+        android:src="@drawable/book_starred_selector" />
 </LinearLayout>
