@@ -32,13 +32,13 @@
                 android:id="@+id/story_size"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#8A000000"
-                android:textAlignment="viewStart"
-                android:paddingRight="8dp"
-                android:layout_weight="0.1"
                 android:layout_gravity="center"
-                android:maxLines="1" />
+                android:layout_weight="0.15"
+                android:maxLines="1"
+                android:paddingRight="8dp"
+                android:textAlignment="viewStart"
+                android:textColor="#8A000000"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/story_last_opened"
@@ -72,7 +72,7 @@
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3" />
+                android:layout_weight="0.25" />
         </LinearLayout>
     </LinearLayout>
 
