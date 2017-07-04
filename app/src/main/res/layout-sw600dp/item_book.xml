@@ -3,8 +3,8 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textSize="18sp"
-    android:paddingTop="7dp"
-    android:paddingBottom="7dp"
+    android:paddingTop="11dp"
+    android:paddingBottom="11dp"
     android:paddingLeft="22sp"
     android:paddingRight="22sp">
 
