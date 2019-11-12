@@ -1,5 +1,6 @@
 package net.bloople.stories;
 
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ class NodesHelper {
                         builder.blockMargin(textView.getPaddingStart());
                         builder.headingBreakHeight(0);
                         builder.headingTextSizeMultipliers(HEADER_SIZES);
+                        builder.headingTypeface(Typeface.create(textView.getTypeface(), Typeface.BOLD));
                         builder.thematicBreakColor(textView.getCurrentTextColor());
                     }
                 })
