@@ -1,7 +1,7 @@
 package net.bloople.stories;
 
 import android.graphics.Typeface;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
