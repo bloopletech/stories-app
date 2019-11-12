@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import org.commonmark.node.Document;
 import org.commonmark.node.Heading;
 import org.commonmark.node.Node;
 
@@ -44,7 +45,11 @@ class NodesHelper {
 
     }
 
-    static boolean isOutline(Node content) {
-        return content instanceof Heading;
+    static Heading toHeading(Node content) {
+        if(content instanceof Heading) return (Heading)content;
+        Node firstChild = content.getFirstChild();
+        if(firstChild instanceof Heading) return (Heading)firstChild;
+
+        return null;
     }
 }

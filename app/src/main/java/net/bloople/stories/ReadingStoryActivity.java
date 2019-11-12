@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.commonmark.node.Heading;
 import org.commonmark.node.Node;
 
 import java.io.BufferedReader;
@@ -153,8 +154,9 @@ public class ReadingStoryActivity extends Activity {
             for(int i = 0; i < nodesArgs[0].size(); i++) {
                 Node node = nodesArgs[0].get(i);
 
-                if(NodesHelper.isOutline(node)) {
-                    outlineNodes.add(node);
+                Heading heading = NodesHelper.toHeading(node);
+                if(heading != null) {
+                    outlineNodes.add(heading);
                     outlineNodesMap.add(countBefore + i);
                 }
             }
