@@ -1,17 +1,20 @@
 package net.bloople.stories;
 
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.commonmark.node.Node;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import io.noties.markwon.Markwon;
+
 class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
-    private List<String> nodes;
-    private NodeRenderer renderer;
+    private Markwon markwon;
+    private List<Node> nodes;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
@@ -21,12 +24,12 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
         }
     }
 
-    NodesAdapter() {
+    NodesAdapter(Markwon markwon) {
+        this.markwon = markwon;
         nodes = new ArrayList<>();
-        renderer = new NodeRenderer();
     }
 
-    void addAll(List<String> newNodes) {
+    void addAll(List<Node> newNodes) {
         nodes.addAll(newNodes);
         notifyItemRangeInserted(nodes.size() - 1, newNodes.size());
     }
@@ -34,10 +37,7 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
     // Create new views (invoked by the layout manager)
     @Override
     public NodesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.node_view, parent,
-                false);
-
-        return new ViewHolder(view);
+        return new ViewHolder(NodesHelper.createNodeView(parent));
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -45,7 +45,7 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView tv = holder.textView;
 
-        tv.setText(renderer.render(nodes.get(position)));
+        markwon.setParsedMarkdown(tv, markwon.render(nodes.get(position)));
 
         tv.setPadding(
             tv.getPaddingLeft(),

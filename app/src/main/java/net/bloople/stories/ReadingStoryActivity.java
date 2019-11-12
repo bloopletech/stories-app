@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.commonmark.node.Node;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,11 +17,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.noties.markwon.Markwon;
+
 import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 public class ReadingStoryActivity extends Activity {
     private RecyclerView nodesView;
     private LinearLayoutManager layoutManager;
+    private Markwon markwon;
     private NodesAdapter adapter;
     private DrawerLayout drawer;
     private RecyclerView sidebar;
@@ -38,7 +44,8 @@ public class ReadingStoryActivity extends Activity {
         layoutManager = new LinearLayoutManager(this);
         nodesView.setLayoutManager(layoutManager);
 
-        adapter = new NodesAdapter();
+        markwon = NodesHelper.buildMarkwon(nodesView);
+        adapter = new NodesAdapter(markwon);
         nodesView.setAdapter(adapter);
 
         nodesView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -55,7 +62,7 @@ public class ReadingStoryActivity extends Activity {
         sidebarLayoutManager = new LinearLayoutManager(this);
         sidebar.setLayoutManager(sidebarLayoutManager);
 
-        outlineAdapter = new OutlineAdapter();
+        outlineAdapter = new OutlineAdapter(markwon);
         sidebar.setAdapter(outlineAdapter);
 
         drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
@@ -105,7 +112,7 @@ public class ReadingStoryActivity extends Activity {
         drawer.closeDrawers();
     }
 
-    private class ParseStoryTask extends AsyncTask<Book, List<String>, Void> {
+    private class ParseStoryTask extends AsyncTask<Book, List<Node>, Void> {
         int BATCH_SIZE = 50;
         private boolean setPosition = false;
 
@@ -115,9 +122,11 @@ public class ReadingStoryActivity extends Activity {
             try {
                 StoryParser parser = new StoryParser(new BufferedReader(new FileReader(book.path())));
 
-                List<String> accumulator = new ArrayList<>();
+                List<Node> accumulator = new ArrayList<>();
                 while(parser.hasNext()) {
-                    accumulator.add(parser.next());
+                    Node node = markwon.parse(parser.next());
+                    if(node.getFirstChild() == null) continue;
+                    accumulator.add(node);
 
                     if(accumulator.size() >= BATCH_SIZE) {
                         publishProgress(accumulator);
@@ -134,17 +143,17 @@ public class ReadingStoryActivity extends Activity {
             return null;
         }
 
-        protected void onProgressUpdate(List<String>... nodesArgs) {
+        protected void onProgressUpdate(List<Node>... nodesArgs) {
             int countBefore = adapter.getItemCount();
             adapter.addAll(nodesArgs[0]);
 
-            List<String> outlineNodes = new ArrayList<>();
+            List<Node> outlineNodes = new ArrayList<>();
             List<Integer> outlineNodesMap = new ArrayList<>();
 
             for(int i = 0; i < nodesArgs[0].size(); i++) {
-                String node = nodesArgs[0].get(i);
+                Node node = nodesArgs[0].get(i);
 
-                if(NodeRenderer.isOutline(node)) {
+                if(NodesHelper.isOutline(node)) {
                     outlineNodes.add(node);
                     outlineNodesMap.add(countBefore + i);
                 }

@@ -6,13 +6,17 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.commonmark.node.Node;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import io.noties.markwon.Markwon;
+
 class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
-    private List<String> nodes;
+    private Markwon markwon;
+    private List<Node> nodes;
     private List<Integer> nodeIndexes;
-    private NodeRenderer renderer;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
@@ -32,13 +36,13 @@ class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
         }
     }
 
-    OutlineAdapter() {
+    OutlineAdapter(Markwon markwon) {
+        this.markwon = markwon;
         nodes = new ArrayList<>();
         nodeIndexes = new ArrayList<>();
-        renderer = new NodeRenderer();
     }
 
-    void addAll(List<String> newNodes, List<Integer> newNodeIndexes) {
+    void addAll(List<Node> newNodes, List<Integer> newNodeIndexes) {
         nodes.addAll(newNodes);
         nodeIndexes.addAll(newNodeIndexes);
         notifyItemRangeInserted(nodes.size() - 1, newNodes.size());
@@ -58,7 +62,7 @@ class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView tv = holder.textView;
 
-        tv.setText(renderer.render(nodes.get(position)));
+        markwon.setParsedMarkdown(tv, markwon.render(nodes.get(position)));
 
         tv.setPadding(
                 tv.getPaddingLeft(),
