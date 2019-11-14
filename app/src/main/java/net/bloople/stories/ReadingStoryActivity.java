@@ -154,7 +154,7 @@ public class ReadingStoryActivity extends Activity {
             for(int i = 0; i < nodesArgs[0].size(); i++) {
                 Node node = nodesArgs[0].get(i);
 
-                Heading heading = NodesHelper.toHeading(node);
+                Heading heading = NodesHelper.findFirstHeading(node);
                 if(heading != null) {
                     outlineNodes.add(heading);
                     outlineNodesMap.add(countBefore + i);

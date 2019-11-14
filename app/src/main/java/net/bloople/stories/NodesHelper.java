@@ -50,10 +50,15 @@ class NodesHelper {
 
     }
 
-    static Heading toHeading(Node content) {
-        if(content instanceof Heading) return (Heading)content;
-        Node firstChild = content.getFirstChild();
-        if(firstChild instanceof Heading) return (Heading)firstChild;
+    static Heading findFirstHeading(Node node) {
+        if(node instanceof Heading) return (Heading)node;
+
+        node = node.getFirstChild();
+        while(node != null) {
+            Heading heading = findFirstHeading(node);
+            if(heading != null) return heading;
+            node = node.getNext();
+        }
 
         return null;
     }
