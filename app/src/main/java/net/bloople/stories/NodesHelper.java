@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import org.commonmark.node.Document;
 import org.commonmark.node.Heading;
 import org.commonmark.node.Node;
 
@@ -29,10 +28,16 @@ class NodesHelper {
                 .usePlugin(new AbstractMarkwonPlugin() {
                     @Override
                     public void configureTheme(@NonNull MarkwonTheme.Builder builder) {
-                        builder.blockMargin(textView.getPaddingStart());
+                        builder.blockMargin(textView.getPaddingBottom());
+
+                        builder.blockQuoteColor(textView.getCurrentTextColor());
+
+                        builder.bulletWidth((int)Math.round(textView.getPaddingBottom() * 0.4));
+
                         builder.headingBreakHeight(0);
                         builder.headingTextSizeMultipliers(HEADER_SIZES);
                         builder.headingTypeface(Typeface.create(textView.getTypeface(), Typeface.BOLD));
+
                         builder.thematicBreakColor(textView.getCurrentTextColor());
                     }
                 })
