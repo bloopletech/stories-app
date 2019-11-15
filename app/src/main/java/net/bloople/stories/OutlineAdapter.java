@@ -15,8 +15,7 @@ import io.noties.markwon.Markwon;
 
 class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
     private Markwon markwon;
-    private List<Node> nodes;
-    private List<Integer> nodeIndexes;
+    private ParsedBook parsedBook;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
@@ -29,24 +28,18 @@ class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
                 public void onClick(View view) {
                     ReadingStoryActivity activity = (ReadingStoryActivity)view.getContext();
 
-                    activity.scrollToPosition(nodeIndexes.get(getAdapterPosition()));
+                    activity.scrollToPosition(parsedBook.indexOfOutlineNodeIndex(getAdapterPosition()));
                     activity.closeDrawers();
                 }
             });
         }
     }
 
-    OutlineAdapter(Markwon markwon) {
+    OutlineAdapter(Markwon markwon, ParsedBook parsedBook) {
         this.markwon = markwon;
-        nodes = new ArrayList<>();
-        nodeIndexes = new ArrayList<>();
+        this.parsedBook = parsedBook;
     }
 
-    void addAll(List<Node> newNodes, List<Integer> newNodeIndexes) {
-        nodes.addAll(newNodes);
-        nodeIndexes.addAll(newNodeIndexes);
-        notifyItemRangeInserted(nodes.size() - 1, newNodes.size());
-    }
 
     // Create new views (invoked by the layout manager)
     @Override
@@ -62,7 +55,7 @@ class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView tv = holder.textView;
 
-        markwon.setParsedMarkdown(tv, markwon.render(nodes.get(position)));
+        markwon.setParsedMarkdown(tv, markwon.render(parsedBook.getOutlineNode(position)));
 
         tv.setPadding(
                 tv.getPaddingLeft(),
@@ -75,6 +68,6 @@ class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.ViewHolder> {
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return nodes.size();
+        return parsedBook.outlineNodesSize();
     }
 }

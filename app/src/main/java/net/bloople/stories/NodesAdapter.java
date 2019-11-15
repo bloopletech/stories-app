@@ -5,16 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.commonmark.node.Node;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import io.noties.markwon.Markwon;
 
 class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
     private Markwon markwon;
-    private List<Node> nodes;
+    private ParsedBook parsedBook;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
@@ -24,14 +19,9 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
         }
     }
 
-    NodesAdapter(Markwon markwon) {
+    NodesAdapter(Markwon markwon, ParsedBook parsedBook) {
         this.markwon = markwon;
-        nodes = new ArrayList<>();
-    }
-
-    void addAll(List<Node> newNodes) {
-        nodes.addAll(newNodes);
-        notifyItemRangeInserted(nodes.size() - 1, newNodes.size());
+        this.parsedBook = parsedBook;
     }
 
     // Create new views (invoked by the layout manager)
@@ -45,7 +35,7 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         TextView tv = holder.textView;
 
-        markwon.setParsedMarkdown(tv, markwon.render(nodes.get(position)));
+        markwon.setParsedMarkdown(tv, markwon.render(parsedBook.get(position)));
 
         tv.setPadding(
             tv.getPaddingLeft(),
@@ -58,6 +48,6 @@ class NodesAdapter extends RecyclerView.Adapter<NodesAdapter.ViewHolder> {
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return nodes.size();
+        return parsedBook.size();
     }
 }
