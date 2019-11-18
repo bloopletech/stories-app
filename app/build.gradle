@@ -8,8 +8,9 @@ android {
         applicationId "net.bloople.stories"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 17
-        versionName "1.16"
+        final def version = 18
+        versionCode version
+        versionName version.toString()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
