@@ -21,6 +21,7 @@ class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder> {
         TextView sizeView;
         TextView ageView;
         TextView lastOpenedView;
+        TextView openedCountView;
         ImageButton starView;
         ViewHolder(View view) {
             super(view);
@@ -42,6 +43,7 @@ class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder> {
             sizeView = (TextView)view.findViewById(R.id.story_size);
             ageView = (TextView)view.findViewById(R.id.story_age);
             lastOpenedView = (TextView)view.findViewById(R.id.story_last_opened);
+            openedCountView = (TextView)view.findViewById(R.id.story_opened_count);
             starView = (ImageButton)view.findViewById(R.id.story_star);
 
             starView.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +101,10 @@ class BooksAdapter extends CursorRecyclerAdapter<BooksAdapter.ViewHolder> {
         }
         else {
             holder.lastOpenedView.setText("Never");
+        }
+
+        if(holder.openedCountView != null) {
+            holder.openedCountView.setText(String.valueOf(book.openedCount()));
         }
 
         holder.starView.setActivated(book.starred());

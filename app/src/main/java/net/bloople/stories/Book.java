@@ -14,6 +14,7 @@ class Book {
     private long lastOpenedAt;
     private int lastReadPosition;
     private boolean starred;
+    private int openedCount;
 
     static Book findById(Context context, long id) {
         SQLiteDatabase db = DatabaseHelper.instance(context);
@@ -59,6 +60,7 @@ class Book {
         lastOpenedAt = result.getLong(result.getColumnIndex("last_opened_at"));
         lastReadPosition = result.getInt(result.getColumnIndex("last_read_position"));
         starred = result.getInt(result.getColumnIndex("starred")) == 1;
+        openedCount = result.getInt(result.getColumnIndex("opened_count"));
     }
 
     public String path() {
@@ -117,6 +119,14 @@ class Book {
         this.starred = starred;
     }
 
+    public int openedCount() {
+        return openedCount;
+    }
+
+    public void openedCount(int openedCount) {
+        this.openedCount = openedCount;
+    }
+
     public void save(Context context) {
         ContentValues values = new ContentValues();
         values.put("path", path);
@@ -126,6 +136,7 @@ class Book {
         values.put("last_opened_at", lastOpenedAt);
         values.put("last_read_position", lastReadPosition);
         values.put("starred", starred ? 1 : 0);
+        values.put("opened_count", openedCount);
 
         SQLiteDatabase db = DatabaseHelper.instance(context);
 

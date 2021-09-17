@@ -72,6 +72,7 @@ public class ReadingStoryActivity extends Activity {
         book = Book.findById(this, intent.getLongExtra("_id", -1));
 
         book.lastOpenedAt(System.currentTimeMillis());
+        book.openedCount(book.openedCount() + 1);
         book.save(this);
 
         ParseStoryTask parser = new ParseStoryTask();
