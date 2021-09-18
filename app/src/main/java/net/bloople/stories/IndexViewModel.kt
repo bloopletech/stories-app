@@ -23,7 +23,7 @@ class IndexViewModel(application: Application) : AndroidViewModel(application) {
     val sortDirectionAsc: Boolean
         get() = searcher.sortDirectionAsc
 
-    fun setSearchText(searchText: String?) {
+    fun setSearchText(searchText: String) {
         searcher.setSearchText(searchText)
         resolve()
     }
