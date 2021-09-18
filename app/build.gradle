@@ -59,11 +59,6 @@ dependencies {
 
     final def markwon_version = '4.1.2'
     implementation "io.noties.markwon:core:$markwon_version"
-
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.annotation:annotation:1.2.0'
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test:rules:1.4.0'
 }
 repositories {
     mavenCentral()
