@@ -33,7 +33,7 @@ internal class IndexingTask(private val context: Context, private val indexable:
             max += it.count
             while(it.moveToNext()) {
                 val book = Book(it)
-                val file = File(book.path())
+                val file = File(book.path!!)
                 if(!file.exists()) book.destroy(context)
                 progress++
                 publishProgress(progress, max)
@@ -63,20 +63,16 @@ internal class IndexingTask(private val context: Context, private val indexable:
     }
 
     private fun indexFile(file: File) {
-        try {
-            var book = Book.findByPath(context, file.canonicalPath)
-            if(book == null) book = Book()
-            book.path(file.canonicalPath)
-            book.title(file.name.replace("\\.txt$".toRegex(), ""))
-            book.mtime(file.lastModified())
-            book.size(file.length())
-            book.save(context)
-            progress++
-            indexed++
+        (Book.findByPathOrNull(context, file.canonicalPath) ?: Book()).edit(context) {
+            val filePath = file.canonicalPath
+            path = filePath
+            title = file.name.replace("\\.txt$".toRegex(), "")
+            mtime = file.lastModified()
+            size = file.length()
         }
-        catch(e: IOException) {
-            e.printStackTrace()
-        }
+        progress++
+        indexed++
+
         publishProgress(progress, max)
     }
 }

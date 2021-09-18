@@ -25,7 +25,7 @@ class ReadingStoryActivity : Activity() {
     private var sidebar: RecyclerView? = null
     private var sidebarLayoutManager: LinearLayoutManager? = null
     private var outlineAdapter: OutlineAdapter? = null
-    private var book: Book? = null
+    private var bookId: Long = -1
     private var savedReadPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,10 +57,13 @@ class ReadingStoryActivity : Activity() {
 
         drawer = findViewById(R.id.drawer_layout)
 
-        book = Book.findById(this, intent.getLongExtra("_id", -1))
-        book!!.lastOpenedAt(System.currentTimeMillis())
-        book!!.openedCount(book!!.openedCount() + 1)
-        book!!.save(this)
+        bookId = Book.idFrom(intent)
+
+        val book = Book.find(this, bookId)
+        book.edit(this) {
+            lastOpenedAt = System.currentTimeMillis()
+            openedCount += 1
+        }
 
         val parser = ParseStoryTask()
         parser.execute(book)
@@ -68,8 +71,7 @@ class ReadingStoryActivity : Activity() {
 
     override fun onStop() {
         super.onStop()
-        book!!.lastOpenedAt(System.currentTimeMillis())
-        book!!.save(this)
+        Book.edit(this, bookId) { lastOpenedAt = System.currentTimeMillis() }
         savePosition()
     }
 
@@ -81,8 +83,7 @@ class ReadingStoryActivity : Activity() {
     fun savePosition() {
         val currentReadPosition = layoutManager!!.findFirstVisibleItemPosition()
         if(savedReadPosition != currentReadPosition) {
-            book!!.lastReadPosition(currentReadPosition)
-            book!!.save(this)
+            Book.edit(this, bookId) { lastReadPosition = currentReadPosition }
             savedReadPosition = currentReadPosition
         }
     }
@@ -102,7 +103,7 @@ class ReadingStoryActivity : Activity() {
         override fun doInBackground(vararg bookArgs: Book?): Void? {
             val book = bookArgs[0]
             try {
-                val parser = StoryParser(BufferedReader(FileReader(book!!.path())))
+                val parser = StoryParser(BufferedReader(FileReader(book!!.path)))
                 var accumulator: MutableList<Node> = ArrayList()
 
                 while(parser.hasNext()) {
@@ -144,9 +145,9 @@ class ReadingStoryActivity : Activity() {
 
             outlineAdapter!!.addAll(outlineNodes, outlineNodesMap)
 
-            if(!setPosition && adapter!!.itemCount >= book!!.lastReadPosition()) {
+            val lastReadPosition = Book.find(this@ReadingStoryActivity, bookId).lastReadPosition
+            if(!setPosition && adapter!!.itemCount >= lastReadPosition) {
                 setPosition = true
-                val lastReadPosition = book!!.lastReadPosition()
                 savedReadPosition = lastReadPosition
                 scrollToPosition(lastReadPosition)
             }

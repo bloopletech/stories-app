@@ -37,13 +37,10 @@ internal class BooksAdapter(cursor: Cursor?) : CursorRecyclerAdapter<BooksAdapte
             starView = view.findViewById(R.id.story_star)
 
             starView.setOnClickListener { v: View ->
-                val context = v.context
-                val id = itemId
-                val book = Book.findById(context, id)
-                val starred = !book.starred()
-                book.starred(starred)
-                book.save(context)
-                v.isActivated = starred
+                Book.edit(v.context, itemId) {
+                    starred = !starred
+                    v.isActivated = starred
+                }
             }
         }
     }
@@ -57,17 +54,17 @@ internal class BooksAdapter(cursor: Cursor?) : CursorRecyclerAdapter<BooksAdapte
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(holder: ViewHolder?, cursor: Cursor?) {
+    override fun onBindViewHolder(holder: ViewHolder?, cursor: Cursor) {
         val book = Book(cursor)
-        holder!!.titleView.text = book.title()
-        holder.sizeView.text = getReadableFileSize(book.size())
+        holder!!.titleView.text = book.title
+        holder.sizeView.text = getReadableFileSize(book.size)
 
         if(holder.ageView != null) {
-            val age = DATE_FORMAT.format(Date(book.mtime()))
+            val age = DATE_FORMAT.format(Date(book.mtime))
             holder.ageView!!.text = age
         }
 
-        val lastOpenedMillis = book.lastOpenedAt()
+        val lastOpenedMillis = book.lastOpenedAt
         if(lastOpenedMillis > 0L) {
             val lastOpened = DATE_FORMAT.format(Date(lastOpenedMillis))
             holder.lastOpenedView.text = lastOpened
@@ -77,10 +74,10 @@ internal class BooksAdapter(cursor: Cursor?) : CursorRecyclerAdapter<BooksAdapte
         }
 
         if(holder.openedCountView != null) {
-            holder.openedCountView!!.text = book.openedCount().toString()
+            holder.openedCountView!!.text = book.openedCount.toString()
         }
 
-        holder.starView.isActivated = book.starred()
+        holder.starView.isActivated = book.starred
     }
 
     companion object {

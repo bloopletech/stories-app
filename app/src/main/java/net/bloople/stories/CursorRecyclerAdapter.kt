@@ -28,37 +28,29 @@ import androidx.recyclerview.widget.RecyclerView
  */
 
 abstract class CursorRecyclerAdapter<VH : RecyclerView.ViewHolder?>(c: Cursor?) : RecyclerView.Adapter<VH>() {
-    protected var mDataValid = false
-    var cursor: Cursor? = null
-        protected set
-    protected var mRowIDColumn = 0
+    private var cursor: Cursor? = null
+    private var mRowIDColumn = 0
 
     fun init(c: Cursor?) {
-        val cursorPresent = c != null
         cursor = c
-        mDataValid = cursorPresent
-        mRowIDColumn = if(cursorPresent) c!!.getColumnIndexOrThrow("_id") else -1
+        mRowIDColumn = c?.getColumnIndexOrThrow("_id") ?: -1
         setHasStableIds(true)
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        check(mDataValid) { "this should only be called when the cursor is valid" }
+        check(cursor != null) { "this should only be called when the cursor is valid" }
         check(cursor!!.moveToPosition(position)) { "couldn't move cursor to position $position" }
-        onBindViewHolder(holder, cursor)
+        onBindViewHolder(holder, cursor!!)
     }
 
-    abstract fun onBindViewHolder(holder: VH, cursor: Cursor?)
+    abstract fun onBindViewHolder(holder: VH, cursor: Cursor)
+
     override fun getItemCount(): Int {
-        return if(mDataValid && cursor != null) {
-            cursor!!.count
-        }
-        else {
-            0
-        }
+        return cursor?.count ?: 0
     }
 
     override fun getItemId(position: Int): Long {
-        return if(hasStableIds() && mDataValid && cursor != null) {
+        return if(hasStableIds() && cursor != null) {
             if(cursor!!.moveToPosition(position)) {
                 cursor!!.getLong(mRowIDColumn)
             }
@@ -102,13 +94,11 @@ abstract class CursorRecyclerAdapter<VH : RecyclerView.ViewHolder?>(c: Cursor?) 
         cursor = newCursor
         if(newCursor != null) {
             mRowIDColumn = newCursor.getColumnIndexOrThrow("_id")
-            mDataValid = true
             // notify the observers about the new cursor
             notifyDataSetChanged()
         }
         else {
             mRowIDColumn = -1
-            mDataValid = false
             // notify the observers about the lack of a data set
             notifyItemRangeRemoved(0, itemCount)
         }
