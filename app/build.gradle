@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 29
@@ -33,10 +34,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.annotation:annotation:1.2.0'
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test:rules:1.4.0'
+
+    implementation "androidx.core:core-ktx:1.6.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     def lifecycle_version = "2.3.1"
     def arch_version = "2.1.0"
@@ -59,4 +59,12 @@ dependencies {
 
     final def markwon_version = '4.1.2'
     implementation "io.noties.markwon:core:$markwon_version"
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.annotation:annotation:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
+}
+repositories {
+    mavenCentral()
 }
