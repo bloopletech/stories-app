@@ -21,7 +21,7 @@ import android.widget.Toast;
 public class IndexingActivity extends Activity implements Indexable {
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
+    private static final String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
@@ -29,23 +29,16 @@ public class IndexingActivity extends Activity implements Indexable {
     private ProgressBar progressBar;
     private Button indexButton;
     private String indexRoot;
-    private boolean canAccessFiles;
+    private boolean canAccessFiles = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_indexing);
 
-        if(android.os.Build.VERSION.SDK_INT >= 23) {
-            int permission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-            canAccessFiles = false;
-            if(permission == PackageManager.PERMISSION_GRANTED) canAccessFiles = true;
-            else requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-        }
-        else {
-            canAccessFiles = true;
-        }
+        int permission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(permission == PackageManager.PERMISSION_GRANTED) canAccessFiles = true;
+        else requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
 
         progressBar = (ProgressBar)findViewById(R.id.indexing_progress);
 
