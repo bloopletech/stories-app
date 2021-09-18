@@ -126,6 +126,7 @@ public class IndexingActivity extends Activity implements Indexable {
     }
 
     public void onIndexingComplete(int count) {
+        setResult(RESULT_OK);
         indexButton.setEnabled(true);
         Toast.makeText(IndexingActivity.this, "Indexing complete, " + count + " stories indexed.",
                 Toast.LENGTH_LONG).show();
