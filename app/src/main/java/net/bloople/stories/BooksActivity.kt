@@ -19,11 +19,11 @@ import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
 
 class BooksActivity : AppCompatActivity() {
-    private var model: IndexViewModel? = null
-    private var listView: RecyclerView? = null
-    private var adapter: BooksAdapter? = null
-    private var layoutManager: LinearLayoutManager? = null
-    private var searchResultsToolbar: TextView? = null
+    private lateinit var model: IndexViewModel
+    private lateinit var listView: RecyclerView
+    private lateinit var adapter: BooksAdapter
+    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var searchResultsToolbar: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,7 @@ class BooksActivity : AppCompatActivity() {
 
         searchResultsToolbar = findViewById(R.id.search_results_toolbar)
 
-        model!!.sorterDescription.observe(this, { description: String -> searchResultsToolbar!!.setText(description) })
+        model.sorterDescription.observe(this, { description: String -> searchResultsToolbar.text = description })
 
         val searchField: EditText = findViewById(R.id.searchText)
         searchField.setOnEditorActionListener { v: TextView, actionId: Int, _: KeyEvent? ->
@@ -46,7 +46,7 @@ class BooksActivity : AppCompatActivity() {
                 `in`.hideSoftInputFromWindow(searchField.windowToken, 0)
                 searchField.clearFocus()
 
-                model!!.setSearchText(v.text.toString())
+                model.setSearchText(v.text.toString())
 
                 handled = true
             }
@@ -60,7 +60,7 @@ class BooksActivity : AppCompatActivity() {
                 if(event.rawX >= clickIndex) {
                     searchField.setText("")
                     searchField.clearFocus()
-                    model!!.setSearchText("")
+                    model.setSearchText("")
                     return@setOnTouchListener true
                 }
             }
@@ -69,22 +69,22 @@ class BooksActivity : AppCompatActivity() {
 
         listView = findViewById(R.id.stories_list)
         adapter = BooksAdapter(null)
-        listView!!.adapter = adapter
+        listView.adapter = adapter
 
         layoutManager = LinearLayoutManager(this)
-        listView!!.layoutManager = layoutManager
+        listView.layoutManager = layoutManager
 
-        model!!.searchResults.observe(this, { searchResults: Cursor -> adapter!!.swapCursor(searchResults) })
+        model.searchResults.observe(this, { searchResults: Cursor -> adapter.swapCursor(searchResults) })
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        model!!.setSort(savedInstanceState.getInt("sortMethod"), savedInstanceState.getBoolean("sortDirectionAsc"))
+        model.setSort(savedInstanceState.getInt("sortMethod"), savedInstanceState.getBoolean("sortDirectionAsc"))
     }
 
     public override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        savedInstanceState.putInt("sortMethod", model!!.sortMethod)
-        savedInstanceState.putBoolean("sortDirectionAsc", model!!.sortDirectionAsc)
+        savedInstanceState.putInt("sortMethod", model.sortMethod)
+        savedInstanceState.putBoolean("sortDirectionAsc", model.sortDirectionAsc)
         super.onSaveInstanceState(savedInstanceState)
     }
 
@@ -96,36 +96,38 @@ class BooksActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(menuItem: MenuItem): Boolean {
-        val sortMethod = model!!.sortMethod
+        val sortMethod = model.sortMethod
         var newSortMethod = sortMethod
 
-        if(menuItem.itemId == R.id.sort_alphabetic) {
-            newSortMethod = BooksSearcher.SORT_ALPHABETIC
-        }
-        else if(menuItem.itemId == R.id.sort_age) {
-            newSortMethod = BooksSearcher.SORT_AGE
-        }
-        else if(menuItem.itemId == R.id.sort_size) {
-            newSortMethod = BooksSearcher.SORT_SIZE
-        }
-        else if(menuItem.itemId == R.id.sort_last_opened) {
-            newSortMethod = BooksSearcher.SORT_LAST_OPENED
-        }
-        else if(menuItem.itemId == R.id.sort_starred) {
-            newSortMethod = BooksSearcher.SORT_STARRED
-        }
-        else if(menuItem.itemId == R.id.sort_opened_count) {
-            newSortMethod = BooksSearcher.SORT_OPENED_COUNT
-        }
-        else if(menuItem.itemId == R.id.manage_indexing) {
-            val intent = Intent(this@BooksActivity, IndexingActivity::class.java)
-            startActivityForResult(intent, REQUEST_CODE_INDEXING)
-            return true
+        when(menuItem.itemId) {
+            R.id.sort_alphabetic -> {
+                newSortMethod = BooksSearcher.SORT_ALPHABETIC
+            }
+            R.id.sort_age -> {
+                newSortMethod = BooksSearcher.SORT_AGE
+            }
+            R.id.sort_size -> {
+                newSortMethod = BooksSearcher.SORT_SIZE
+            }
+            R.id.sort_last_opened -> {
+                newSortMethod = BooksSearcher.SORT_LAST_OPENED
+            }
+            R.id.sort_starred -> {
+                newSortMethod = BooksSearcher.SORT_STARRED
+            }
+            R.id.sort_opened_count -> {
+                newSortMethod = BooksSearcher.SORT_OPENED_COUNT
+            }
+            R.id.manage_indexing -> {
+                val intent = Intent(this@BooksActivity, IndexingActivity::class.java)
+                startActivityForResult(intent, REQUEST_CODE_INDEXING)
+                return true
+            }
         }
 
-        var sortDirectionAsc = model!!.sortDirectionAsc
+        var sortDirectionAsc = model.sortDirectionAsc
         if(sortMethod == newSortMethod) sortDirectionAsc = !sortDirectionAsc
-        model!!.setSort(newSortMethod, sortDirectionAsc)
+        model.setSort(newSortMethod, sortDirectionAsc)
 
         return true
     }
@@ -133,7 +135,7 @@ class BooksActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == REQUEST_CODE_INDEXING && resultCode == RESULT_OK) {
-            model!!.refresh()
+            model.refresh()
         }
     }
 
