@@ -7,7 +7,6 @@ import io.noties.markwon.Markwon
 import androidx.drawerlayout.widget.DrawerLayout
 import android.os.Bundle
 import android.os.AsyncTask
-import android.view.View
 import org.commonmark.node.Node
 import java.io.BufferedReader
 import java.io.FileReader
@@ -15,13 +14,10 @@ import java.io.IOException
 import java.util.ArrayList
 
 class ReadingStoryActivity : Activity() {
-    private lateinit var nodesView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var markwon: Markwon
     private lateinit var adapter: NodesAdapter
     private lateinit var drawer: DrawerLayout
-    private lateinit var sidebar: RecyclerView
-    private lateinit var sidebarLayoutManager: LinearLayoutManager
     private lateinit var outlineAdapter: OutlineAdapter
     private var bookId: Long = -1
     private var savedReadPosition = 0
@@ -30,7 +26,7 @@ class ReadingStoryActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reading_story)
 
-        nodesView = findViewById(R.id.nodes_view)
+        val nodesView: RecyclerView = findViewById(R.id.nodes_view)
         nodesView.itemAnimator = null
 
         layoutManager = LinearLayoutManager(this)
@@ -46,8 +42,8 @@ class ReadingStoryActivity : Activity() {
             }
         })
 
-        sidebar = findViewById<View>(R.id.sidebar) as RecyclerView
-        sidebarLayoutManager = LinearLayoutManager(this)
+        val sidebar: RecyclerView = findViewById(R.id.sidebar)
+        val sidebarLayoutManager = LinearLayoutManager(this)
         sidebar.layoutManager = sidebarLayoutManager
 
         outlineAdapter = OutlineAdapter(markwon)
