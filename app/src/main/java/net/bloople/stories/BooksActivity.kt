@@ -20,10 +20,6 @@ import androidx.appcompat.widget.Toolbar
 
 class BooksActivity : AppCompatActivity() {
     private lateinit var model: IndexViewModel
-    private lateinit var listView: RecyclerView
-    private lateinit var adapter: BooksAdapter
-    private lateinit var layoutManager: LinearLayoutManager
-    private lateinit var searchResultsToolbar: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +30,7 @@ class BooksActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        searchResultsToolbar = findViewById(R.id.search_results_toolbar)
+        val searchResultsToolbar: TextView = findViewById(R.id.search_results_toolbar)
 
         model.sorterDescription.observe(this, { description: String -> searchResultsToolbar.text = description })
 
@@ -67,11 +63,11 @@ class BooksActivity : AppCompatActivity() {
             false
         }
 
-        listView = findViewById(R.id.stories_list)
-        adapter = BooksAdapter(null)
+        val listView: RecyclerView = findViewById(R.id.stories_list)
+        val adapter = BooksAdapter(null)
         listView.adapter = adapter
 
-        layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
         listView.layoutManager = layoutManager
 
         model.searchResults.observe(this, { searchResults: Cursor -> adapter.swapCursor(searchResults) })
