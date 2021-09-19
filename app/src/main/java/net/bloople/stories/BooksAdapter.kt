@@ -26,9 +26,7 @@ internal class BooksAdapter(cursor: Cursor?) : CursorRecyclerAdapter<BooksAdapte
 
         init {
             view.setOnClickListener { v: View ->
-                val intent = Intent(v.context, ReadingStoryActivity::class.java)
-                intent.putExtra("_id", itemId)
-                v.context.startActivity(intent)
+                v.context.startActivity(Book.idTo(Intent(v.context, ReadingStoryActivity::class.java), itemId))
             }
 
             titleView = view.findViewById(R.id.story_title)
@@ -61,23 +59,17 @@ internal class BooksAdapter(cursor: Cursor?) : CursorRecyclerAdapter<BooksAdapte
         holder.titleView.text = book.title
         holder.sizeView.text = getReadableFileSize(book.size)
 
-        if(holder.ageView != null) {
-            val age = DATE_FORMAT.format(Date(book.mtime))
-            holder.ageView!!.text = age
-        }
+        holder.ageView?.let { view -> view.text = DATE_FORMAT.format(Date(book.mtime)) }
 
         val lastOpenedMillis = book.lastOpenedAt
         if(lastOpenedMillis > 0L) {
-            val lastOpened = DATE_FORMAT.format(Date(lastOpenedMillis))
-            holder.lastOpenedView.text = lastOpened
+            holder.lastOpenedView.text = DATE_FORMAT.format(Date(lastOpenedMillis))
         }
         else {
             holder.lastOpenedView.text = "Never"
         }
 
-        if(holder.openedCountView != null) {
-            holder.openedCountView!!.text = book.openedCount.toString()
-        }
+        holder.openedCountView?.let { view -> view.text = book.openedCount.toString() }
 
         holder.starView.isActivated = book.starred
     }
