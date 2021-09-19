@@ -16,9 +16,9 @@ import android.widget.ProgressBar
 import android.widget.Toast
 
 class IndexingActivity : Activity(), Indexable {
-    private var progressBar: ProgressBar? = null
-    private var indexButton: Button? = null
-    private var indexRoot: String? = null
+    private lateinit var progressBar: ProgressBar
+    private lateinit var indexButton: Button
+    private lateinit var indexRoot: String
     private var canAccessFiles = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +31,8 @@ class IndexingActivity : Activity(), Indexable {
 
         progressBar = findViewById(R.id.indexing_progress)
         indexButton = findViewById(R.id.index_button)
-        indexButton!!.setOnClickListener {
-            indexButton!!.isEnabled = false
+        indexButton.setOnClickListener {
+            indexButton.isEnabled = false
             if(canAccessFiles) {
                 val indexer = IndexingTask(this@IndexingActivity,this@IndexingActivity)
                 indexer.execute(indexRoot)
@@ -49,7 +49,7 @@ class IndexingActivity : Activity(), Indexable {
 
         val indexDirectoryText: EditText = findViewById(R.id.index_directory)
         indexDirectoryText.setText(indexRoot)
-        indexDirectoryText.setOnEditorActionListener { v, actionId, event ->
+        indexDirectoryText.setOnEditorActionListener { _, actionId, event ->
             if(event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
                 indexRoot = indexDirectoryText.text.toString()
                 savePreferences()
@@ -64,7 +64,7 @@ class IndexingActivity : Activity(), Indexable {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if(requestCode == REQUEST_EXTERNAL_STORAGE && grantResults.size > 0
+        if(requestCode == REQUEST_EXTERNAL_STORAGE && grantResults.isNotEmpty()
             && grantResults[0] == PackageManager.PERMISSION_GRANTED) canAccessFiles = true
     }
 
@@ -74,7 +74,7 @@ class IndexingActivity : Activity(), Indexable {
 
     private fun loadPreferences() {
         val preferences = preferences()
-        indexRoot = preferences.getString("index-root", Environment.getExternalStorageDirectory().absolutePath)
+        indexRoot = preferences.getString("index-root", Environment.getExternalStorageDirectory().absolutePath).toString()
     }
 
     private fun savePreferences() {
@@ -84,13 +84,13 @@ class IndexingActivity : Activity(), Indexable {
     }
 
     override fun onIndexingProgress(progress: Int, max: Int) {
-        progressBar!!.progress = progress
-        progressBar!!.max = max
+        progressBar.progress = progress
+        progressBar.max = max
     }
 
     override fun onIndexingComplete(count: Int) {
         setResult(RESULT_OK)
-        indexButton!!.isEnabled = true
+        indexButton.isEnabled = true
         Toast.makeText(
             this@IndexingActivity, "Indexing complete, $count stories indexed.",
             Toast.LENGTH_LONG
