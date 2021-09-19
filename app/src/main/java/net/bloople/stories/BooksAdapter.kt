@@ -12,6 +12,8 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.log10
+import kotlin.math.pow
 
 internal class BooksAdapter(cursor: Cursor?) : CursorRecyclerAdapter<BooksAdapter.ViewHolder>(cursor) {
     internal class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -85,8 +87,8 @@ internal class BooksAdapter(cursor: Cursor?) : CursorRecyclerAdapter<BooksAdapte
         fun getReadableFileSize(size: Long): String {
             if(size <= 0) return "0"
             val units = arrayOf("B", "KB", "MB", "GB", "TB")
-            val digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
-            return DecimalFormat("#").format(size / Math.pow(1024.0, digitGroups.toDouble())) + " " + units[digitGroups]
+            val digitGroups = (log10(size.toDouble()) / log10(1024.0)).toInt()
+            return DecimalFormat("#").format(size / 1024.0.pow(digitGroups.toDouble())) + " " + units[digitGroups]
         }
     }
 }
