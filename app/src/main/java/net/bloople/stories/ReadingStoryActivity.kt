@@ -1,7 +1,5 @@
 package net.bloople.stories
 
-import net.bloople.stories.NodesHelper.buildMarkwon
-import net.bloople.stories.NodesHelper.findFirstHeading
 import android.app.Activity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,14 +15,14 @@ import java.io.IOException
 import java.util.ArrayList
 
 class ReadingStoryActivity : Activity() {
-    private var nodesView: RecyclerView? = null
-    private var layoutManager: LinearLayoutManager? = null
-    private var markwon: Markwon? = null
-    private var adapter: NodesAdapter? = null
-    private var drawer: DrawerLayout? = null
-    private var sidebar: RecyclerView? = null
-    private var sidebarLayoutManager: LinearLayoutManager? = null
-    private var outlineAdapter: OutlineAdapter? = null
+    private lateinit var nodesView: RecyclerView
+    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var markwon: Markwon
+    private lateinit var adapter: NodesAdapter
+    private lateinit var drawer: DrawerLayout
+    private lateinit var sidebar: RecyclerView
+    private lateinit var sidebarLayoutManager: LinearLayoutManager
+    private lateinit var outlineAdapter: OutlineAdapter
     private var bookId: Long = -1
     private var savedReadPosition = 0
 
@@ -33,15 +31,15 @@ class ReadingStoryActivity : Activity() {
         setContentView(R.layout.activity_reading_story)
 
         nodesView = findViewById(R.id.nodes_view)
-        nodesView!!.itemAnimator = null
+        nodesView.itemAnimator = null
 
         layoutManager = LinearLayoutManager(this)
-        nodesView!!.layoutManager = layoutManager
+        nodesView.layoutManager = layoutManager
 
-        markwon = buildMarkwon(nodesView!!)
-        adapter = NodesAdapter(markwon!!)
-        nodesView!!.adapter = adapter
-        nodesView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        markwon = NodesHelper.buildMarkwon(nodesView)
+        adapter = NodesAdapter(markwon)
+        nodesView.adapter = adapter
+        nodesView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if(newState == RecyclerView.SCROLL_STATE_IDLE) savePosition()
@@ -50,10 +48,10 @@ class ReadingStoryActivity : Activity() {
 
         sidebar = findViewById<View>(R.id.sidebar) as RecyclerView
         sidebarLayoutManager = LinearLayoutManager(this)
-        sidebar!!.layoutManager = sidebarLayoutManager
+        sidebar.layoutManager = sidebarLayoutManager
 
-        outlineAdapter = OutlineAdapter(markwon!!)
-        sidebar!!.adapter = outlineAdapter
+        outlineAdapter = OutlineAdapter(markwon)
+        sidebar.adapter = outlineAdapter
 
         drawer = findViewById(R.id.drawer_layout)
 
@@ -81,7 +79,7 @@ class ReadingStoryActivity : Activity() {
     }
 
     fun savePosition() {
-        val currentReadPosition = layoutManager!!.findFirstVisibleItemPosition()
+        val currentReadPosition = layoutManager.findFirstVisibleItemPosition()
         if(savedReadPosition != currentReadPosition) {
             Book.edit(this, bookId) { lastReadPosition = currentReadPosition }
             savedReadPosition = currentReadPosition
@@ -89,11 +87,11 @@ class ReadingStoryActivity : Activity() {
     }
 
     fun scrollToPosition(position: Int) {
-        layoutManager!!.scrollToPositionWithOffset(position, 0)
+        layoutManager.scrollToPositionWithOffset(position, 0)
     }
 
     fun closeDrawers() {
-        drawer!!.closeDrawers()
+        drawer.closeDrawers()
     }
 
     private inner class ParseStoryTask : AsyncTask<Book?, List<Node>?, Void?>() {
@@ -107,7 +105,7 @@ class ReadingStoryActivity : Activity() {
                 var accumulator: MutableList<Node> = ArrayList()
 
                 while(parser.hasNext()) {
-                    val node = markwon!!.parse(parser.next())
+                    val node = markwon.parse(parser.next())
                     if(node.firstChild == null) continue
 
                     accumulator.add(node)
@@ -127,26 +125,26 @@ class ReadingStoryActivity : Activity() {
         }
 
         override fun onProgressUpdate(vararg nodesArgs: List<Node>?) {
-            val countBefore = adapter!!.itemCount
+            val countBefore = adapter.itemCount
 
-            adapter!!.addAll(nodesArgs[0]!!)
+            adapter.addAll(nodesArgs[0]!!)
 
             val outlineNodes: MutableList<Node> = ArrayList()
             val outlineNodesMap: MutableList<Int> = ArrayList()
 
             for(i in nodesArgs[0]!!.indices) {
                 val node = nodesArgs[0]!![i]
-                val heading = findFirstHeading(node)
+                val heading = NodesHelper.findFirstHeading(node)
                 if(heading != null) {
                     outlineNodes.add(heading)
                     outlineNodesMap.add(countBefore + i)
                 }
             }
 
-            outlineAdapter!!.addAll(outlineNodes, outlineNodesMap)
+            outlineAdapter.addAll(outlineNodes, outlineNodesMap)
 
             val lastReadPosition = Book.find(this@ReadingStoryActivity, bookId).lastReadPosition
-            if(!setPosition && adapter!!.itemCount >= lastReadPosition) {
+            if(!setPosition && adapter.itemCount >= lastReadPosition) {
                 setPosition = true
                 savedReadPosition = lastReadPosition
                 scrollToPosition(lastReadPosition)
