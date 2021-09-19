@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
  * SOFTWARE.
  */
 
-abstract class CursorRecyclerAdapter<VH : RecyclerView.ViewHolder?>(c: Cursor?) : RecyclerView.Adapter<VH>() {
+abstract class CursorRecyclerAdapter<VH : RecyclerView.ViewHolder>(c: Cursor?) : RecyclerView.Adapter<VH>() {
     private var cursor: Cursor? = null
     private var mRowIDColumn = 0
 

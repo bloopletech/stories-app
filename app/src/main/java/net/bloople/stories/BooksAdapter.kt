@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-internal class BooksAdapter(cursor: Cursor?) : CursorRecyclerAdapter<BooksAdapter.ViewHolder?>(cursor) {
+internal class BooksAdapter(cursor: Cursor?) : CursorRecyclerAdapter<BooksAdapter.ViewHolder>(cursor) {
     internal class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var titleView: TextView
         var sizeView: TextView
@@ -54,9 +54,9 @@ internal class BooksAdapter(cursor: Cursor?) : CursorRecyclerAdapter<BooksAdapte
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(holder: ViewHolder?, cursor: Cursor) {
+    override fun onBindViewHolder(holder: ViewHolder, cursor: Cursor) {
         val book = Book(cursor)
-        holder!!.titleView.text = book.title
+        holder.titleView.text = book.title
         holder.sizeView.text = getReadableFileSize(book.size)
 
         if(holder.ageView != null) {
