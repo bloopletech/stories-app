@@ -14,10 +14,9 @@ internal class OutlineAdapter(private val markwon: Markwon) : RecyclerView.Adapt
     private val nodeIndexes: MutableList<Int>
 
     internal inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var textView: TextView
+        var textView: TextView = view.findViewById(R.id.text_view)
 
         init {
-            textView = view.findViewById(R.id.text_view)
             textView.setOnClickListener { view ->
                 val activity = view.context as ReadingStoryActivity
                 activity.scrollToPosition(nodeIndexes[bindingAdapterPosition])
@@ -34,10 +33,7 @@ internal class OutlineAdapter(private val markwon: Markwon) : RecyclerView.Adapt
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(
-            R.layout.outline_node_view, parent,
-            false
-        )
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.outline_node_view, parent,false)
         return ViewHolder(view)
     }
 
