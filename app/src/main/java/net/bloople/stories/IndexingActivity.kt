@@ -14,8 +14,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
-class IndexingActivity : Activity(), Indexable {
+class IndexingActivity : AppCompatActivity(), Indexable {
     private lateinit var progressBar: ProgressBar
     private lateinit var indexButton: Button
     private lateinit var indexRoot: String
@@ -24,6 +26,9 @@ class IndexingActivity : Activity(), Indexable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_indexing)
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
         val permission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if(permission == PackageManager.PERMISSION_GRANTED) canAccessFiles = true
@@ -58,12 +63,13 @@ class IndexingActivity : Activity(), Indexable {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == RESULT_CANCELED) finish()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode == REQUEST_EXTERNAL_STORAGE && grantResults.isNotEmpty()
             && grantResults[0] == PackageManager.PERMISSION_GRANTED) canAccessFiles = true
     }
