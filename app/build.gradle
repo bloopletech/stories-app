@@ -11,7 +11,7 @@ android {
         applicationId "net.bloople.stories"
         minSdkVersion 28
         targetSdkVersion 28
-        final def version = 22
+        final def version = 23
         versionCode version
         versionName version.toString()
     }
