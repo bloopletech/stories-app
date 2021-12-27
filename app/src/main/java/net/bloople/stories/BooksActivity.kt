@@ -17,6 +17,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuCompat
 
 class BooksActivity : AppCompatActivity() {
     private lateinit var model: IndexViewModel
@@ -88,6 +89,7 @@ class BooksActivity : AppCompatActivity() {
         super.onCreateOptionsMenu(menu)
         val inflater = menuInflater
         inflater.inflate(R.menu.list_menu, menu)
+        MenuCompat.setGroupDividerEnabled(menu, true);
         return true
     }
 
