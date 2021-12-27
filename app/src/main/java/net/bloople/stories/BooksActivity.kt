@@ -89,7 +89,7 @@ class BooksActivity : AppCompatActivity() {
         super.onCreateOptionsMenu(menu)
         val inflater = menuInflater
         inflater.inflate(R.menu.list_menu, menu)
-        MenuCompat.setGroupDividerEnabled(menu, true);
+        MenuCompat.setGroupDividerEnabled(menu, true)
         return true
     }
 
