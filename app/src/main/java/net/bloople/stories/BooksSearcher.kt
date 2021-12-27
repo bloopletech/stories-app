@@ -18,7 +18,7 @@ class BooksSearcher internal constructor() {
     }
 
     fun description(): String {
-        return "Sorted by " + sortMethodDescription().toLowerCase() + " " + sortDirectionDescription().toLowerCase()
+        return "Sorted by " + sortMethodDescription().lowercase() + " " + sortDirectionDescription().lowercase()
     }
 
     private fun sortMethodDescription(): String {
